@@ -32,10 +32,10 @@ BINNAME		= http-server
 # Variables for compile and link time flags                   #
 # (Please don't pass -c CFLAG here)                           #
 ###############################################################
-CFLAGS		= -Wall -Werror
+CFLAGS		= -Wall -std=c++14
 CFLAGS_SAN	= -fsanitize=address -fsanitize=undefined
 CFLAGS_DBG	= -O0 -ggdb3
-CFLAGS_REL	= -O2
+CFLAGS_REL	= -O2 -Werror
 
 LDFLAGS		=
 LDFLAGS_DBG	=
@@ -63,6 +63,7 @@ OBJTREE_TMP	= $(addprefix $(OBJDIR)/,\
 
 HDRLIST		= $(addprefix -I ,\
 			$(shell find $(HDRDIR) -type d))
+# HDRLIST		= -I $(HDRDIR)/
 SRCLIST		= $(shell find $(SRCDIR) -name "*.$(SRCEXT)")
 OBJLIST		= $(subst .$(SRCEXT),.$(OBJEXT),\
 			$(subst $(SRCDIR)/,$(OBJDIR)/,\
