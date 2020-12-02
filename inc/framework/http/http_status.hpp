@@ -13,6 +13,8 @@ enum class HTTPStatus {
 
     //400 series
     HTTP_BAD_REQUEST,
+    HTTP_UNSUPP_METHOD,
+    HTTP_NOT_FOUND,
 
     //500 series
 

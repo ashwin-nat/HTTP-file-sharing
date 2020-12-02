@@ -7,6 +7,10 @@
 
 struct HTTPRequest {
 public:
+    std::string m_method;
+    std::string m_uri;
+    std::string m_ver;
+    std::string m_host;
     std::map <std::string, std::string> m_header;
     std::vector <std::string> m_body;
 

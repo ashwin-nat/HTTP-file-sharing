@@ -1,5 +1,6 @@
 #include "http.hpp"
 #include <poll.h>
+#include <assert.h>
 
 /******************************************************************************/
 #define CHAR_CR         '\r'
@@ -10,9 +11,11 @@
 /**
  * @brief       - Construct a new HTTP server object
  * @param port  - Port number to bind to
+ * @param backlog-TCP connection backlog
  */
 HTTPServer :: HTTPServer (
-    int port)
+    int port,
+    int backlog)
 {
     m_tcp_server = std::make_unique <TCPServer> (port);
 }
@@ -98,10 +101,11 @@ HTTPServer :: recv_req (
  * @return ssize_t  - number of bytes sent if successful, else -1
  */
 ssize_t 
-HTTPServer :: send_rsp (
+send_http_rsp (
     std::shared_ptr<TCPConnection> &client,
     HTTPResponse &rsp)
 {
+    assert (rsp.m_status != HTTPStatus::HTTP_GEN_ERR);
     std::vector <char> rspbuff;
     rsp.build_rsp (rspbuff);
 

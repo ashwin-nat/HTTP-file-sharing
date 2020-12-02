@@ -96,6 +96,7 @@ TCPConnection :: send (
     const std::vector<char> &buffer,
     int flags)
 {
+    // std::cout << "send: size=" << buffer.size() << std::endl;
     return _send_wrapper (m_fd, buffer.data(), buffer.size(), flags);
 }
 

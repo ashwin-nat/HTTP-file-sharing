@@ -57,11 +57,12 @@ HTTPResponse :: build_rsp (
     temp << crlf;
 
     //fill the server info
+    temp << "Server: ";
     temp << SERVER_INFO;
     temp << crlf;
 
     //content type
-    temp << "Content-Type: ";
+    temp << "Content-type: ";
     temp << m_content_type;
     temp << crlf;
 
@@ -75,7 +76,6 @@ HTTPResponse :: build_rsp (
     for (auto ch : m_body) {
         temp << ch;
     }
-
 
     //now, write everything into the provided buffer
     for (auto ch : temp.str()) {

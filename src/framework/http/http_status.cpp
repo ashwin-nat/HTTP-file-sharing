@@ -21,6 +21,14 @@ http :: to_string (
         ret = "400 Bad Request";
         break;
     
+    case HTTPStatus::HTTP_NOT_FOUND:
+        ret = "404 Not Found";
+        break;
+    
+    case HTTPStatus::HTTP_UNSUPP_METHOD:
+        ret = "405 Method Not Allowed";
+        break;
+    
     case HTTPStatus::HTTP_GEN_ERR:
         assert (false);
         ret = "HTTP_GEN_ERR";
@@ -47,6 +55,14 @@ http :: to_int (
     //400 series
     case HTTPStatus::HTTP_BAD_REQUEST:
         ret = 400;
+        break;
+    
+    case HTTPStatus::HTTP_NOT_FOUND:
+        ret = 404;
+        break;
+    
+    case HTTPStatus::HTTP_UNSUPP_METHOD:
+        ret = 405;
         break;
     
     case HTTPStatus::HTTP_GEN_ERR:

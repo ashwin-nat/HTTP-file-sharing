@@ -76,7 +76,7 @@ public:
     ssize_t 
     send (
         const std::vector<char> &buffer,
-        int flags=0);
+        int flags=MSG_NOSIGNAL);
     /**
      * @brief           - Get the printable string version of the src address
      * @return std::string 

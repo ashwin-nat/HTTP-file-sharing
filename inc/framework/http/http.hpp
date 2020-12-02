@@ -5,8 +5,9 @@
 #include "http_req.hpp"
 #include "http_rsp.hpp"
 
-#define SERVER_HTTP_VER                 "1.1"
+#define SERVER_HTTP_VER                 "1.0"
 #define HTTP_READ_TIMEDOUT              -2
+#define HTTP_CLIENT_DISCONNECTED        0
 #define HTTP_READ_INFINITE_TIMEOUT      0
 #define CHAR_SPACE                      ' '
 #define CHAR_COLON                      ':'
@@ -21,10 +22,12 @@ public:
     /**
      * @brief       - Construct a new HTTP server object
      * @param port  - Port number to bind to
+     * @param backlog-TCP backlog
      */
     explicit 
     HTTPServer (
-        int port);
+        int port,
+        int backlog=5);
     /**
      * @brief       - Accept an incoming connection request
      * @return std::shared_ptr<TCPConnection> - ptr to the connection object
@@ -45,16 +48,17 @@ public:
         std::shared_ptr<TCPConnection> &client,
         std::vector<std::string> &buffer,
         unsigned int timeout=0);
-    /**
-     * @brief           - Send HTTP Response to the client
-     * @param client    - pointer to the connection object
-     * @param rsp       - reference to the HTTPResponse struct
-     * @return ssize_t  - number of bytes sent if successful, else -1
-     */
-    ssize_t 
-    send_rsp (
-        std::shared_ptr<TCPConnection> &client,
-        HTTPResponse &rsp);
 };
+
+/**
+ * @brief           - Send HTTP Response to the client
+ * @param client    - pointer to the connection object
+ * @param rsp       - reference to the HTTPResponse struct
+ * @return ssize_t  - number of bytes sent if successful, else -1
+ */
+ssize_t 
+send_http_rsp (
+    std::shared_ptr<TCPConnection> &client,
+    HTTPResponse &rsp);
 
 #endif  //__HTTP_HPP__
