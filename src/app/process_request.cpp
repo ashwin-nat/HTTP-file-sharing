@@ -18,7 +18,7 @@ void get_404_page (HTTPRequest &req, std::vector<char> &buffer);
 bool 
 process_request (
     const std::vector<std::string> &lines,
-    std::shared_ptr<TCPConnection> &connection)
+    std::shared_ptr<TCPConnection> connection)
 {
     HTTPRequest req;
     if (req.parse(lines) == false) {

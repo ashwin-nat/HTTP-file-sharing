@@ -13,6 +13,6 @@
 bool 
 process_request (
     const std::vector<std::string> &lines,
-    std::shared_ptr<TCPConnection> &connection);
+    std::shared_ptr<TCPConnection> connection);
 
 #endif  //__PROCESS_REQUEST_HPP__

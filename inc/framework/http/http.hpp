@@ -45,7 +45,7 @@ public:
      */
     ssize_t 
     recv_req (
-        std::shared_ptr<TCPConnection> &client,
+        std::shared_ptr<TCPConnection> client,
         std::vector<std::string> &buffer,
         unsigned int timeout=0);
 };
@@ -58,7 +58,7 @@ public:
  */
 ssize_t 
 send_http_rsp (
-    std::shared_ptr<TCPConnection> &client,
+    std::shared_ptr<TCPConnection> client,
     HTTPResponse &rsp);
 
 #endif  //__HTTP_HPP__

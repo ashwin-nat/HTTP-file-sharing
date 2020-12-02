@@ -32,7 +32,7 @@ HTTPServer :: accept_connection (void)
 
 /**
  * @brief           - Receive a HTTP request
- * @param client    - unique ptr to client connection object
+ * @param client    - shared ptr to client connection object
  * @param buffer    - vector of strings where the req is to be stored
  * @param timeout   - The timeout for recv (in milliseconds) 
  *                      (0 implies no timeout)
@@ -41,7 +41,7 @@ HTTPServer :: accept_connection (void)
  */
 ssize_t 
 HTTPServer :: recv_req (
-    std::shared_ptr<TCPConnection> &client,
+    std::shared_ptr<TCPConnection> client,
     std::vector<std::string> &buffer,
     unsigned int timeout)
 {
@@ -102,7 +102,7 @@ HTTPServer :: recv_req (
  */
 ssize_t 
 send_http_rsp (
-    std::shared_ptr<TCPConnection> &client,
+    std::shared_ptr<TCPConnection> client,
     HTTPResponse &rsp)
 {
     assert (rsp.m_status != HTTPStatus::HTTP_GEN_ERR);
