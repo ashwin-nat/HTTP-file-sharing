@@ -56,6 +56,33 @@ public:
     void 
     set_name (
         const std::string &name);
+    /**
+     * @brief           - Receive data into given vector of uint8's
+     * @param buffer    - reference to the vector of uint8's
+     * @param flags     - flags for recv syscall
+     * @return ssize_t  - bytes received if successful, -1 if failure, 0 if 
+     *                      connection closed
+     */
+    ssize_t 
+    recv (
+        std::vector<char> &buffer,
+        int flags = 0);
+    /**
+     * @brief           - Send the data through this TCP connection
+     * @param buffer    - vector containing the data
+     * @param flags     - flags for send() system call
+     * @return ssize_t  - number of bytes sent if success, -1 if failure
+     */
+    ssize_t 
+    send (
+        const std::vector<char> &buffer,
+        int flags=0);
+    /**
+     * @brief           - Get the printable string version of the src address
+     * @return std::string 
+     */
+    std::string 
+    get_src_addr (void);
 };
 
 class TCPServer {

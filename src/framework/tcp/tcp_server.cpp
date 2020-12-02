@@ -47,7 +47,7 @@ TCPServer :: TCPServer (
     }
 
     m_port = port;
-    std::cout << "Created server. fd = " << m_fd << std::endl;
+    std::cout << "Created TCP server. fd = " << m_fd << std::endl;
 }
 
 /**
@@ -55,6 +55,7 @@ TCPServer :: TCPServer (
  */
 TCPServer :: ~TCPServer (void)
 {
+    std::cout << "Destroying TCP server with fd = " << m_fd << std::endl;
     close (m_fd);
     m_port = 0;
     m_fd = -1;
