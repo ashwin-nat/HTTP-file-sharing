@@ -5,8 +5,6 @@
 #include <iostream>
 #include <iterator>
 
-// static std::vector<std::string> _split_string_into_words_vector 
-//     (const std::string &input);
 static std::pair<std::string,std::string> _split_line_colon (
     const std::string &input);
 

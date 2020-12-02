@@ -16,7 +16,7 @@
 
 class HTTPServer{
 private:
-    std::unique_ptr<TCPServer> m_tcp_server;
+    std::shared_ptr<TCPServer> m_tcp_server;
 public:
     /**
      * @brief       - Construct a new HTTP server object
@@ -27,9 +27,9 @@ public:
         int port);
     /**
      * @brief       - Accept an incoming connection request
-     * @return std::unique_ptr<TCPConnection> - ptr to the connection object
+     * @return std::shared_ptr<TCPConnection> - ptr to the connection object
      */
-    std::unique_ptr<TCPConnection> 
+    std::shared_ptr<TCPConnection> 
     accept_connection (void);
     /**
      * @brief           - Receive a HTTP request
@@ -42,7 +42,7 @@ public:
      */
     ssize_t 
     recv_req (
-        std::unique_ptr<TCPConnection> &client,
+        std::shared_ptr<TCPConnection> &client,
         std::vector<std::string> &buffer,
         unsigned int timeout=0);
     /**
@@ -53,7 +53,7 @@ public:
      */
     ssize_t 
     send_rsp (
-        std::unique_ptr<TCPConnection> &client,
+        std::shared_ptr<TCPConnection> &client,
         HTTPResponse &rsp);
 };
 

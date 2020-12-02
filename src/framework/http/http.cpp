@@ -19,9 +19,9 @@ HTTPServer :: HTTPServer (
 
 /**
  * @brief       - Accept an incoming connection request
- * @return std::unique_ptr<TCPConnection> - ptr to the connection object
+ * @return std::shared_ptr<TCPConnection> - ptr to the connection object
  */
-std::unique_ptr<TCPConnection> 
+std::shared_ptr<TCPConnection> 
 HTTPServer :: accept_connection (void)
 {
     return m_tcp_server->accept_connection ();
@@ -38,7 +38,7 @@ HTTPServer :: accept_connection (void)
  */
 ssize_t 
 HTTPServer :: recv_req (
-    std::unique_ptr<TCPConnection> &client,
+    std::shared_ptr<TCPConnection> &client,
     std::vector<std::string> &buffer,
     unsigned int timeout)
 {
@@ -99,7 +99,7 @@ HTTPServer :: recv_req (
  */
 ssize_t 
 HTTPServer :: send_rsp (
-    std::unique_ptr<TCPConnection> &client,
+    std::shared_ptr<TCPConnection> &client,
     HTTPResponse &rsp)
 {
     std::vector <char> rspbuff;
