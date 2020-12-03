@@ -124,7 +124,6 @@ static std::string _get_parent_dir (std::string &path)
         if (path[max] == '/') { break; }
     }
 
-    std::cout << __func__ << ": max=" << max << std::endl;
     //copy all characters upto that
     for (index=0; index<=max; ++index) {
         ret += path[index];
