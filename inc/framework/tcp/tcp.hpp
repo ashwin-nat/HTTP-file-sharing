@@ -78,6 +78,16 @@ public:
         const std::vector<char> &buffer,
         int flags=MSG_NOSIGNAL);
     /**
+     * @brief           - Send the file through this TCP connection
+     * @param filename  - name of the file to be sent
+     * @param size      - number of bytes to be sent
+     * @return ssize_t  - bytes sent
+     */
+    ssize_t 
+    send (
+        const std::string &filename,
+        size_t size);
+    /**
      * @brief           - Get the printable string version of the src address
      * @return std::string 
      */

@@ -7,7 +7,7 @@ static void process_get_request (HTTPRequest &req, HTTPResponse &rsp);
 HTTPStatus build_rsp_html (std::vector<char> &buffer, HTTPRequest &req, 
     std::vector <FSEntry> &tree);
 void get_404_page (HTTPRequest &req, std::vector<char> &buffer);
-HTTPStatus get_file (std::vector<char> &buffer, HTTPRequest &req);
+HTTPStatus get_file (HTTPResponse &rsp, HTTPRequest &req);
 
 /**
  * @brief           - Process incoming HTTP request
@@ -59,11 +59,11 @@ process_get_request (
         // rsp.m_status = HTTPStatus::HTTP_OK;
         // rsp.set_body (file.c_str(), file.size());
 
-        rsp.m_status = get_file (rspbuff, req);
+        rsp.m_status = get_file (rsp, req);
         if (rsp.m_status == HTTPStatus::HTTP_NOT_FOUND) {
             get_404_page (req, rspbuff);
+            rsp.set_body (rspbuff.data(), rspbuff.size());
         }
-        rsp.set_body (rspbuff.data(), rspbuff.size());
     }
     else {
         std::vector <FSEntry> tree;

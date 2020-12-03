@@ -2,8 +2,30 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <cstring>
+#include <cstdio>
+#include <sys/sendfile.h>
 /******************************************************************************/
 #define DEFAULT_BUFFER_SIZE     2048
+/******************************************************************************/
+class FILE_RAII {
+private:
+    FILE *m_fp;
+public:
+    explicit FILE_RAII (const std::string &filename) {
+        m_fp = fopen (filename.c_str(), "rb");
+    }
+    ~FILE_RAII (void) {
+        fclose (m_fp);
+    }
+    int get_fd (void) {
+        if (m_fp) {
+            return fileno (m_fp);
+        }
+        else {
+            return -1;
+        }
+    }
+};
 /******************************************************************************/
 static ssize_t _recv_wrapper (int fd, void *buffer, size_t size, int flags);
 static ssize_t _send_wrapper (int fd, const char *buffer, size_t len,int flags);
@@ -98,6 +120,41 @@ TCPConnection :: send (
 {
     // std::cout << "send: size=" << buffer.size() << std::endl;
     return _send_wrapper (m_fd, buffer.data(), buffer.size(), flags);
+}
+
+/**
+ * @brief           - Send the file through this TCP connection
+ * @param filename  - name of the file to be sent
+ * @param size      - number of bytes to be sent
+ * @return ssize_t  - bytes sent
+ */
+ssize_t 
+TCPConnection :: send (
+    const std::string &filename,
+    size_t size)
+{
+    FILE_RAII file (filename);
+    int file_fd = file.get_fd ();
+    if (file_fd == -1) {
+        return file_fd;
+    }
+
+    off_t off=0;
+    size_t total = 0;
+    ssize_t n;
+    size_t remaining = size;
+    while (total < size) {
+        //send out the data and check the return value
+        n = sendfile (m_fd, file_fd, &off, remaining);
+        if (n==-1) { return n; }
+
+        total += n;
+        off = total;
+        remaining -= n;
+    }
+    return total;
+
+    return 0;
 }
 
 /**

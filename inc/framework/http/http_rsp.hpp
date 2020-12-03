@@ -12,6 +12,8 @@ public:
     std::string m_content_type;
     std::vector<char> m_body;
 
+    std::string m_rsp_filename;
+
     /**
      * @brief           - Copy to the response body
      * @param data      - void pointer to the start of the data

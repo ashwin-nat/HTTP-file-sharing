@@ -61,4 +61,17 @@ send_http_rsp (
     std::shared_ptr<TCPConnection> client,
     HTTPResponse &rsp);
 
+/**
+ * @brief           - Send file over HTTP using sendfile()
+ * @param client    - connection object
+ * @param rsp       - reference to the HTTPResponse struct
+ * @param filename  - The name of the file
+ * @return size_t   - bytes sent
+ */
+size_t 
+send_http_rsp_file (
+    std::shared_ptr<TCPConnection> client,
+    HTTPResponse &rsp,
+    const std::string &filename);
+
 #endif  //__HTTP_HPP__

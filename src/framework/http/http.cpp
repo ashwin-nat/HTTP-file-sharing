@@ -105,9 +105,15 @@ send_http_rsp (
     std::shared_ptr<TCPConnection> client,
     HTTPResponse &rsp)
 {
-    assert (rsp.m_status != HTTPStatus::HTTP_GEN_ERR);
+    ssize_t ret;
     std::vector <char> rspbuff;
     rsp.build_rsp (rspbuff);
+    assert (rsp.m_status != HTTPStatus::HTTP_GEN_ERR);
+    ret = client->send (rspbuff);
 
-    return client->send (rspbuff);
+    if (!rsp.m_rsp_filename.empty()) {
+        //send the file as well
+        ret += client->send (rsp.m_rsp_filename, rsp.m_len);
+    }
+    return ret;
 }
