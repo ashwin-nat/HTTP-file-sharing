@@ -87,12 +87,19 @@ _fill_html_body (
     std::string &uri)
 {
     ss << "<ul style=\"list-style-type:none;\">" << CHAR_LF;
+    
     //prefix the links with the URI and ensure that it does not end with /
     std::string prefix = uri;
     if (prefix[prefix.length()-1] != '/') {
         prefix += '/';
     }
     
+    //if directory is empty, add 2 empty lines
+    if (tree.empty()) {
+        ss << "<br> <br>" << CHAR_LF;
+        return;
+    }
+
     //add every item to the unordered list
     for (auto &it : tree) {
         ss << "<li>";

@@ -85,6 +85,7 @@ _get_filesys_structure (
     std::string &path,
     std::vector<FSEntry> &vec)
 {
+    extern std::string executable_file_name;
     FSEntry item;
     std::error_code err, ok;
     auto dir_iter = fs::directory_iterator(path, err);
@@ -99,8 +100,11 @@ _get_filesys_structure (
         else {
             item.is_dir = false;
         }
+        if (entry.path() == executable_file_name) {
+            continue;
+        }
         item.name = _extract_name_from_path (entry.path());
-        //skip hidden files
+        //skip hidden files and this executable file
         if (item.name[0] != '.') {
             vec.push_back (item);
         }
