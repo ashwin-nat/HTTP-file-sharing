@@ -6,23 +6,15 @@ std::string executable_file_name;
 
 int main (int argc, char *argv[])
 {
-    // std::cout << "Hello world" << std::endl;
-    // std::vector <FSEntry> tree;
-    // get_file_listing ("/abc", tree);
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <port_number>" << std::endl;
+        return 1;
+    }
 
-    // for (auto &it : tree) {
-    //     if (it.is_dir) {
-    //         std::cout << "D: ";
-    //     }
-    //     else {
-    //         std::cout << "F: ";
-    //     }
-    //     std::cout << it.name << std::endl;
-    // }
-    // return 0;
+    int port = std::stoi (argv[1]);
 
     executable_file_name = argv[0];
-    server_loop (5000);
+    server_loop (port);
 
     return 0;
 }

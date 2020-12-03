@@ -1,8 +1,11 @@
 #include "tcp.hpp"
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <stdexcept>
+#include <cstring>
+#include <cerrno>
 /******************************************************************************/
-
+static void _raise_exception (void);
 /******************************************************************************/
 /**
  * @brief       - Construct a new TCPServer object
@@ -22,9 +25,8 @@ TCPServer :: TCPServer (
     //set SO_REUSEADDR
     int opt = 1;
     if(setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
-        perror("setsockopt");
         close(m_fd);
-        //raise exception here
+        _raise_exception ();
     }
 
     //bind to the local ipv4 addr and given port
@@ -34,20 +36,18 @@ TCPServer :: TCPServer (
     addr.sin_port       = htons (port);
 
     if(bind(m_fd, reinterpret_cast<sockaddr*> (&addr), sizeof(addr)) == -1) {
-        perror("bind");
         close(m_fd);
-        //raise exception here
+        _raise_exception();
     }
 
     //setup connection backlog
     if(listen(m_fd, backlog) == -1) {
-        perror("listen");
         close(m_fd);
-        //raise exception here
+        _raise_exception();
     }
 
     m_port = port;
-    std::cout << "Created TCP server. fd = " << m_fd << std::endl;
+    std::cout << "Created TCP server at port " << m_port << ". fd = " << m_fd << std::endl;
 }
 
 /**
@@ -111,4 +111,10 @@ TCPServer :: accept_connection (void)
     
     auto ret = std::make_shared <TCPConnection>(fd, src);
     return ret;
+}
+
+static void 
+_raise_exception (void)
+{
+    throw std::invalid_argument (strerror(errno));
 }
