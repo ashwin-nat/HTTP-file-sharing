@@ -61,6 +61,10 @@ HTTPResponse :: build_rsp (
     temp << SERVER_INFO;
     temp << crlf;
 
+    //notify that persistent connection is not supported
+    temp << "Connection: close";
+    temp << crlf;
+
     //content type
     temp << "Content-type: ";
     temp << m_content_type;

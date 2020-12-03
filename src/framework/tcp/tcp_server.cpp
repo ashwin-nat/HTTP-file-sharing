@@ -97,7 +97,7 @@ TCPServer :: set_name (
  *                  connection object
  * @return std::unique_ptr<TCPConnection> - ptr to connection object
  */
-std::unique_ptr<TCPConnection> 
+std::shared_ptr<TCPConnection> 
 TCPServer :: accept_connection (void)
 {
     sockaddr_in src = {0,};
@@ -109,6 +109,6 @@ TCPServer :: accept_connection (void)
         return nullptr;
     }
     
-    auto ret = std::make_unique <TCPConnection>(fd, src);
+    auto ret = std::make_shared <TCPConnection>(fd, src);
     return ret;
 }

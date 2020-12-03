@@ -7,6 +7,9 @@
 static void _fill_html_body (std::stringstream &ss, std::vector<FSEntry> &tree,
         std::string &uri);
 static std::string _get_parent_dir (std::string &path);
+static void _get_back_links (std::stringstream &ss, std::string &parent);
+static void __get_vector_of_path_nodes (std::string &parent, 
+        std::vector<std::string> &path_nodes);
 
 HTTPStatus 
 build_rsp_html (
@@ -31,9 +34,7 @@ build_rsp_html (
             ("");
     //add link to parent directory, if needed
     if (!parent.empty()) {
-        ss << "<a href=\"" << parent << "\">";
-        ss << "Go UP: " << parent << "</a>" << CHAR_LF;
-        ss << "<br>" << CHAR_LF;
+        _get_back_links (ss, parent);
     }
 
     ss << "<hr>";
@@ -129,4 +130,46 @@ static std::string _get_parent_dir (std::string &path)
         ret += path[index];
     }
     return ret;
+}
+
+static void 
+_get_back_links (
+    std::stringstream &ss, 
+    std::string &parent)
+{
+    // ss << "<a href=\"" << parent << "\">";
+    // ss << "Go UP: " << parent << "</a>" << CHAR_LF;
+    // ss << "<br>" << CHAR_LF;
+
+    std::vector<std::string> path_nodes;
+    __get_vector_of_path_nodes (parent, path_nodes);
+
+    ss << "<a href=\"" << "/" << "\">";
+    ss << "Go UP: " << "/" << "</a>" << CHAR_LF;
+    // ss << "<br>" << CHAR_LF;
+
+    std::string path = "/";
+    for (auto &it : path_nodes) {
+        path += it;
+        ss << "<a href=\"" << path << "\">" << it << "/</a>" << CHAR_LF;
+        path += "/";
+    }
+}
+
+static void 
+__get_vector_of_path_nodes (
+    std::string &parent, 
+    std::vector<std::string> &path_nodes)
+{
+    std::string temp;
+    //skip first character
+    for (unsigned int index=1; index<parent.size(); ++index) {
+        if (parent[index] == '/') {
+            path_nodes.push_back (temp);
+            temp.clear();
+        }
+        else {
+            temp += parent[index];
+        }
+    }
 }

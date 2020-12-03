@@ -40,7 +40,7 @@ HTTPServer :: accept_connection (void)
  *                      client disconnected, -2 if timedout
  */
 ssize_t 
-HTTPServer :: recv_req (
+recv_req (
     std::shared_ptr<TCPConnection> client,
     std::vector<std::string> &buffer,
     unsigned int timeout)

@@ -34,22 +34,22 @@ public:
      */
     std::shared_ptr<TCPConnection> 
     accept_connection (void);
-    /**
-     * @brief           - Receive a HTTP request
-     * @param client    - unique ptr to client connection object
-     * @param buffer    - vector of strings where the req is to be stored
-     * @param timeout   - the timeout for recv  (in milliseconds)
-     *                          (0 implies no timeout)
-     * @return ssize_t  - number of bytes received, or -1 if failed, or 0 if 
-     *                      client disconnected, -2 if timedout
-     */
-    ssize_t 
-    recv_req (
-        std::shared_ptr<TCPConnection> client,
-        std::vector<std::string> &buffer,
-        unsigned int timeout=0);
 };
 
+/**
+ * @brief           - Receive a HTTP request
+ * @param client    - unique ptr to client connection object
+ * @param buffer    - vector of strings where the req is to be stored
+ * @param timeout   - the timeout for recv  (in milliseconds)
+ *                          (0 implies no timeout)
+ * @return ssize_t  - number of bytes received, or -1 if failed, or 0 if 
+ *                      client disconnected, -2 if timedout
+ */
+ssize_t 
+recv_req (
+    std::shared_ptr<TCPConnection> client,
+    std::vector<std::string> &buffer,
+    unsigned int timeout=0);
 /**
  * @brief           - Send HTTP Response to the client
  * @param client    - pointer to the connection object

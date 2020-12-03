@@ -125,9 +125,9 @@ public:
     /**
      * @brief       - Accepts a new connection and returns a unique ptr to the 
      *                  connection object
-     * @return std::unique_ptr<TCPConnection> - ptr to connection object
+     * @return std::shared_ptr<TCPConnection> - ptr to connection object
      */
-    std::unique_ptr<TCPConnection> 
+    std::shared_ptr<TCPConnection> 
     accept_connection (void);
 };
 

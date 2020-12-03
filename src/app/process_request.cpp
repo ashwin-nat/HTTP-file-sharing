@@ -7,6 +7,7 @@ static void process_get_request (HTTPRequest &req, HTTPResponse &rsp);
 HTTPStatus build_rsp_html (std::vector<char> &buffer, HTTPRequest &req, 
     std::vector <FSEntry> &tree);
 void get_404_page (HTTPRequest &req, std::vector<char> &buffer);
+HTTPStatus get_file (std::vector<char> &buffer, HTTPRequest &req);
 
 /**
  * @brief           - Process incoming HTTP request
@@ -26,7 +27,7 @@ process_request (
     }
 
     const std::string src = connection->get_src_addr();
-    const std::string hello = "Hello world";
+    // const std::string hello = "Hello world";
     const std::string fail = "Unsupported HTTP method";
     std::cout << "Received request from " << src << std::endl;
     HTTPResponse rsp;
@@ -34,8 +35,6 @@ process_request (
 
     ssize_t bytes;
     if(req.m_method == "GET") {
-        // rsp.set_body (hello.c_str(), hello.size());
-        // rsp.m_status = HTTPStatus::HTTP_OK;
         std::cout << "\tGET " << req.m_uri << std::endl;
         process_get_request (req, rsp);
     }
@@ -56,9 +55,15 @@ process_get_request (
     std::vector<char> rspbuff;
     //if request is a file, serve the file
     if (is_file (req.m_uri)) {
-        const std::string file = "Coming soon....";
-        rsp.m_status = HTTPStatus::HTTP_OK;
-        rsp.set_body (file.c_str(), file.size());
+        // const std::string file = "Coming soon....";
+        // rsp.m_status = HTTPStatus::HTTP_OK;
+        // rsp.set_body (file.c_str(), file.size());
+
+        rsp.m_status = get_file (rspbuff, req);
+        if (rsp.m_status == HTTPStatus::HTTP_NOT_FOUND) {
+            get_404_page (req, rspbuff);
+        }
+        rsp.set_body (rspbuff.data(), rspbuff.size());
     }
     else {
         std::vector <FSEntry> tree;

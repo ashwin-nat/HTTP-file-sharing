@@ -37,7 +37,7 @@ CFLAGS_SAN	= -fsanitize=address -fsanitize=undefined
 CFLAGS_DBG	= -Og -g -ggdb3
 CFLAGS_REL	= -O2 -Werror
 
-LDFLAGS		= -lstdc++fs
+LDFLAGS		= -lstdc++fs -pthread
 LDFLAGS_DBG	=
 LDFLAGS_SAN	= -lasan -lubsan
 LDFLAGS_REL	=
