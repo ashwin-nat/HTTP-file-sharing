@@ -9,7 +9,7 @@ struct ProgOptions {
     bool verbose=false;
     unsigned int tpool_size=5;
     int tcp_backlog_size=5;
-    bool log_to_console=false;
+    std::string log_file;
 
     bool 
     parse (

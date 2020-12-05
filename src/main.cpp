@@ -48,8 +48,12 @@ init_loguru (
     char *argv[])
 {
     loguru::init (argc, argv);
-    loguru::add_file("http-server.log", loguru::Append, loguru::Verbosity_MAX);
-    if (!prog_options.log_to_console) {
-
+    if (prog_options.log_file.empty()) {
+        loguru::add_file("http-server.log", loguru::Append, 
+            loguru::Verbosity_MAX);
+    }
+    else {
+        loguru::add_file(prog_options.log_file.c_str(), loguru::Append, 
+            loguru::Verbosity_MAX);
     }
 }

@@ -18,13 +18,14 @@ ProgOptions :: parse (
         supported options:
             -p: port number
             -d: working directory
-            -v: verbose logging
+            -V: verbose logging
             -t: thread pool worker count
             -h: help
             -b: TCP backlog size
+            -l: set log file
     */
 
-    while ((opt = getopt (argc, argv, "d:p:Vht:")) != -1) {
+    while ((opt = getopt (argc, argv, "d:p:Vht:vl:")) != -1) {
         switch (opt) {
         //set directory
         case 'd':
@@ -44,6 +45,12 @@ ProgOptions :: parse (
             break;
         case 'b':
             tcp_backlog_size = std::stoi (optarg);
+            break;
+        case 'l':
+            log_file = optarg;
+            break;
+        //loguru uses this
+        case 'v':
             break;
         default:
             // std::cout << "unknown " << (char)opt << ": optind=" << optind 
@@ -67,8 +74,10 @@ ProgOptions :: print_values (void)
             << std::endl;
         std::cout << PREFIX_SPACES << "TCP Backlog = " << tcp_backlog_size << 
             std::endl;
-        std::cout << PREFIX_SPACES << "Log to console = " << log_to_console << 
-            std::endl;
+        if (!log_file.empty()) {
+            std::cout << PREFIX_SPACES << "Log file = " << log_file << 
+                std::endl;
+        }
     }
 }
 
