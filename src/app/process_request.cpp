@@ -1,6 +1,7 @@
 #include "process_request.hpp"
 #include "http.hpp"
 #include "filesys.hpp"
+#include "loguru.hpp"
 #include "prog_options.hpp"
 #include <sstream>
 
@@ -41,8 +42,8 @@ process_request (
 
     ssize_t bytes;
     if(req.m_method == "GET") {
-        std::cout << "Received request from " << src << ": ";
-        std::cout << "GET " << req.m_uri << std::endl;
+        LOG_S(INFO) << "Received request from " << src << ": ";
+        LOG_S(INFO) << "GET " << req.m_uri;
         process_get_request (req, rsp);
     }
     else {
@@ -50,10 +51,10 @@ process_request (
         rsp.m_status = HTTPStatus::HTTP_UNSUPP_METHOD;
     }
     bytes = send_http_rsp (connection, rsp);
-    std::cout << "Sent response of " << _bytes_human_readable (bytes) << 
-        " to " << src << std::endl;
+    LOG_S(INFO) << "Sent response of " << _bytes_human_readable (bytes) << 
+        " to " << src;
     if (prog_options.verbose) {
-        std::cout << "Content-Type: " << rsp.m_content_type << std::endl;
+        LOG_S(INFO) << "Content-Type: " << rsp.m_content_type;
     }
     return true;
 }

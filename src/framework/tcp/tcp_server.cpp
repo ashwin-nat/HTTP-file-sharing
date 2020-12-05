@@ -1,5 +1,6 @@
 #include "tcp.hpp"
 #include "prog_options.hpp"
+#include "loguru.hpp"
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <stdexcept>
@@ -51,8 +52,8 @@ TCPServer :: TCPServer (
 
     m_port = port;
     if (prog_options.verbose) {
-        std::cout << "Created TCP server at port " << m_port 
-            << ". fd = " << m_fd << std::endl;
+        LOG_S(INFO) << "Created TCP server at port " << m_port 
+            << ". fd = " << m_fd;
     }
 }
 
@@ -62,7 +63,7 @@ TCPServer :: TCPServer (
 TCPServer :: ~TCPServer (void)
 {
     if (prog_options.verbose) {
-        std::cout << "Destroying TCP server with fd = " << m_fd << std::endl;
+        LOG_S(INFO) << "Destroying TCP server with fd = " << m_fd;
     }
     close (m_fd);
     m_port = 0;
@@ -90,7 +91,7 @@ TCPServer :: get_name (void)
 }
 
 /**
- * @brief       - Set the socket name string, for debugging
+ * @brief       - Set the socket name string, for INFOging
  * @param name  - const reference to the string containing the name
  */
 void 

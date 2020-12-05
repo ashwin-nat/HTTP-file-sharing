@@ -3,6 +3,7 @@
 #include "http.hpp"
 #include "process_request.hpp"
 #include "tpool.hpp"
+#include "loguru.hpp"
 #include <chrono>
 
 static void _handle_connection (std::shared_ptr<TCPConnection> connection);
@@ -55,8 +56,8 @@ _handle_connection (
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> time_taken = end-start;
 
-        std::cout << "    " << "Request processed in " << 
-            _format_time_double (time_taken.count()) << " seconds" << std::endl;
+        LOG_S(INFO) << "    " << "Request processed in " << 
+            _format_time_double (time_taken.count()) << " seconds";
 
         break;
     }

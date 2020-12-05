@@ -9,11 +9,15 @@ struct ProgOptions {
     bool verbose=false;
     unsigned int tpool_size=5;
     int tcp_backlog_size=5;
+    bool log_to_console=false;
 
     bool 
     parse (
         int argc, 
         char *argv[]);
+    
+    void 
+    print_values (void);
 };
 
 #endif  //__PROG_OPTIONS_HPP__

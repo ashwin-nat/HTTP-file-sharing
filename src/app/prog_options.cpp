@@ -24,7 +24,7 @@ ProgOptions :: parse (
             -b: TCP backlog size
     */
 
-    while ((opt = getopt (argc, argv, "d:p:vht:")) != -1) {
+    while ((opt = getopt (argc, argv, "d:p:Vht:")) != -1) {
         switch (opt) {
         //set directory
         case 'd':
@@ -33,7 +33,7 @@ ProgOptions :: parse (
         case 'p':
             port = std::stoi (optarg);
             break;
-        case 'v':
+        case 'V':
             verbose = true;
             break;
         case 'h':
@@ -55,7 +55,26 @@ ProgOptions :: parse (
     return !unknown;
 }
 
-static void print_help (const char *bin_name)
+void 
+ProgOptions :: print_values (void)
+{
+    if (verbose) {
+        std::cout << "Starting HTTP file sharing server with" << std::endl;
+
+        std::cout << PREFIX_SPACES << "Port = " << port << std::endl;
+        std::cout << PREFIX_SPACES << "Directory = " << dir << std::endl;
+        std::cout << PREFIX_SPACES << "TPool size = " << tpool_size 
+            << std::endl;
+        std::cout << PREFIX_SPACES << "TCP Backlog = " << tcp_backlog_size << 
+            std::endl;
+        std::cout << PREFIX_SPACES << "Log to console = " << log_to_console << 
+            std::endl;
+    }
+}
+
+static void 
+print_help (
+    const char *bin_name)
 {
     std::cout << "Usage: " << bin_name << std::endl;
 
@@ -64,7 +83,8 @@ static void print_help (const char *bin_name)
         << std::endl;
     std::cout << PREFIX_SPACES << "Set server directory: " << 
         "-d <working_directory>" << std::endl;
-    std::cout << PREFIX_SPACES << "Verbose logging: -v" << std::endl;
+    std::cout << PREFIX_SPACES << "Verbose logging: -V (Upper case)" 
+        << std::endl;
     std::cout << PREFIX_SPACES << "Thread pool size: -t <size>" << std::endl;
     std::cout << PREFIX_SPACES << "TCP Backlog size: -b <size>" << std::endl;
 

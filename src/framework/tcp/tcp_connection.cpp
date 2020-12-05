@@ -1,5 +1,6 @@
 #include "tcp.hpp"
 #include "prog_options.hpp"
+#include "loguru.hpp"
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <cstring>
@@ -45,7 +46,7 @@ TCPConnection :: TCPConnection (
     m_fd = fd;
     m_addr = addr;
     if (prog_options.verbose) {
-        std::cout << "New TCP connection. fd = " << fd << std::endl;
+        LOG_S(INFO) << "New TCP connection. fd = " << fd;
     }
 }
 
@@ -55,8 +56,7 @@ TCPConnection :: TCPConnection (
 TCPConnection :: ~TCPConnection (void)
 {
     if (prog_options.verbose) {
-        std::cout << "Destroying TCP connection with fd = " << m_fd 
-            << std::endl;
+        LOG_S(INFO) << "Destroying TCP connection with fd = " << m_fd;
     }
     close (m_fd);
     m_fd = -1;
@@ -126,7 +126,6 @@ TCPConnection :: send (
     const std::vector<char> &buffer,
     int flags)
 {
-    // std::cout << "send: size=" << buffer.size() << std::endl;
     return _send_wrapper (m_fd, buffer.data(), buffer.size(), flags);
 }
 

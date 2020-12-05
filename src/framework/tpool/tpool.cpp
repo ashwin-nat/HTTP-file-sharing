@@ -1,4 +1,5 @@
 #include "tpool.hpp"
+#include "loguru.hpp"
 #include <stdexcept>
 
 /**
@@ -63,6 +64,10 @@ void
 TPool :: _tpool_worker_fn (
     unsigned int id)
 {
+    char tname[10] = {0,};
+    snprintf (tname, sizeof(tname)-1, "TPW%02u", id);
+    loguru::set_thread_name (tname);
+
     while (1) {
         auto ret = get_job ();
         ret.fn_ptr (ret.connection);

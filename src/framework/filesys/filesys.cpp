@@ -1,4 +1,5 @@
 #include "filesys.hpp"
+#include "loguru.hpp"
 #include <filesystem>
 #include <iostream>
 
@@ -42,8 +43,6 @@ is_file (
         return true;
     }
     else {
-        // std::cout << __func__ << ": path = " << path << 
-        //     " err = " << err.message() << std::endl;
         return false;
     }
 }
@@ -90,7 +89,7 @@ _get_filesys_structure (
     std::error_code err, ok;
     auto dir_iter = fs::directory_iterator(path, err);
     if (err != ok) {
-        std::cout << "error " << err.message() << std::endl;
+        LOG_S(INFO) << "error " << err.message();
         return false;
     }
     for (auto &entry : dir_iter) {

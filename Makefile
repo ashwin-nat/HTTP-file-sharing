@@ -32,12 +32,12 @@ BINNAME		= http-server
 # Variables for compile and link time flags                   #
 # (Please don't pass -c CFLAG here)                           #
 ###############################################################
-CFLAGS		= -Wall -std=c++17 -Wshadow
+CFLAGS		= -Wall -std=c++17 -Wshadow -DLOGURU_WITH_STREAMS
 CFLAGS_SAN	= -fsanitize=address -fsanitize=undefined
 CFLAGS_DBG	= -Og -g -ggdb3
 CFLAGS_REL	= -O2 -Werror
 
-LDFLAGS		= -lstdc++fs -pthread
+LDFLAGS		= -lstdc++fs -pthread -ldl
 LDFLAGS_DBG	=
 LDFLAGS_SAN	= -lasan -lubsan
 LDFLAGS_REL	=

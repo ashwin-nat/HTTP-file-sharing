@@ -1,0 +1,88 @@
+
+
+
+
+
+arguments: bin/http-server -p 5000
+Current dir: /home/ashwin/HTTP-file-sharing
+File verbosity level: 9
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2020-12-05 08:01:56.430 (   0.000s) [main thread     ]             loguru.cpp:826   INFO| Logging to 'http-server.log', mode: 'a', verbosity: 9
+2020-12-05 08:02:12.004 (  15.574s) [TPW05           ]    process_request.cpp:45    INFO| Received request from 49.207.194.63: 
+2020-12-05 08:02:12.004 (  15.574s) [TPW05           ]    process_request.cpp:46    INFO| GET /
+
+2020-12-05 08:02:12.005 (  15.576s) [TPW05           ]    process_request.cpp:54    INFO| Sent response of 677.0 B to 49.207.194.63
+
+2020-12-05 08:02:12.005 (  15.576s) [TPW05           ]             server.cpp:59    INFO|     Request processed in 0.0021 seconds
+
+Stack trace:
+7       0x55c3640ebbce bin/http-server(+0x9bce) [0x55c3640ebbce]
+6       0x7fc55cffd0b3 __libc_start_main + 243
+5       0x55c3640eba9d bin/http-server(+0x9a9d) [0x55c3640eba9d]
+4       0x55c36410fec3 bin/http-server(+0x2dec3) [0x55c36410fec3]
+3       0x55c36410e065 bin/http-server(+0x2c065) [0x55c36410e065]
+2       0x55c3640ede99 bin/http-server(+0xbe99) [0x55c3640ede99]
+1       0x7fc55d1dc49f accept + 79
+0       0x7fc55d1dd3c0 /lib/x86_64-linux-gnu/libpthread.so.0(+0x153c0) [0x7fc55d1dd3c0]
+2020-12-05 08:02:32.426 (  35.996s) [main thread     ]                       :0     FATL| Signal: SIGINT
+
+
+
+
+
+arguments: bin/http-server -p 5000
+Current dir: /home/ashwin/HTTP-file-sharing
+File verbosity level: 9
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2020-12-05 08:05:43.751 (   0.000s) [main thread     ]             loguru.cpp:826   INFO| Logging to 'http-server.log', mode: 'a', verbosity: 9
+2020-12-05 08:05:47.598 (   3.847s) [TPW05           ]    process_request.cpp:45    INFO| Received request from 49.207.194.63: 
+2020-12-05 08:05:47.598 (   3.847s) [TPW05           ]    process_request.cpp:46    INFO| GET /
+2020-12-05 08:05:47.599 (   3.848s) [TPW05           ]    process_request.cpp:54    INFO| Sent response of 677.0 B to 49.207.194.63
+2020-12-05 08:05:47.599 (   3.848s) [TPW05           ]             server.cpp:59    INFO|     Request processed in 0.0022 seconds
+2020-12-05 08:05:50.048 (   6.298s) [TPW04           ]    process_request.cpp:45    INFO| Received request from 49.207.194.63: 
+2020-12-05 08:05:50.048 (   6.298s) [TPW04           ]    process_request.cpp:46    INFO| GET /obj
+2020-12-05 08:05:50.048 (   6.298s) [TPW04           ]    process_request.cpp:54    INFO| Sent response of 514.0 B to 49.207.194.63
+2020-12-05 08:05:50.048 (   6.298s) [TPW04           ]             server.cpp:59    INFO|     Request processed in 0.0003 seconds
+2020-12-05 08:05:51.738 (   7.988s) [TPW03           ]    process_request.cpp:45    INFO| Received request from 49.207.194.63: 
+2020-12-05 08:05:51.738 (   7.988s) [TPW03           ]    process_request.cpp:46    INFO| GET /obj/framework
+2020-12-05 08:05:51.739 (   7.988s) [TPW03           ]    process_request.cpp:54    INFO| Sent response of 671.0 B to 49.207.194.63
+2020-12-05 08:05:51.739 (   7.988s) [TPW03           ]             server.cpp:59    INFO|     Request processed in 0.0005 seconds
+2020-12-05 08:05:52.751 (   9.000s) [TPW02           ]    process_request.cpp:45    INFO| Received request from 49.207.194.63: 
+2020-12-05 08:05:52.751 (   9.000s) [TPW02           ]    process_request.cpp:46    INFO| GET /obj/framework/tcp
+2020-12-05 08:05:52.751 (   9.000s) [TPW02           ]    process_request.cpp:54    INFO| Sent response of 607.0 B to 49.207.194.63
+2020-12-05 08:05:52.751 (   9.000s) [TPW02           ]             server.cpp:59    INFO|     Request processed in 0.0004 seconds
+2020-12-05 08:05:54.161 (  10.411s) [TPW01           ]    process_request.cpp:45    INFO| Received request from 49.207.194.63: 
+2020-12-05 08:05:54.161 (  10.411s) [TPW01           ]    process_request.cpp:46    INFO| GET /obj/framework/tcp/tcp_server.o
+2020-12-05 08:05:54.161 (  10.411s) [TPW01           ]    process_request.cpp:54    INFO| Sent response of 22.344 kB to 49.207.194.63
+2020-12-05 08:05:54.162 (  10.411s) [TPW01           ]             server.cpp:59    INFO|     Request processed in 0.0003 seconds
+Stack trace:
+7       0x56394195bc5e bin/http-server(+0x9c5e) [0x56394195bc5e]
+6       0x7f73992eb0b3 __libc_start_main + 243
+5       0x56394195ba65 bin/http-server(+0x9a65) [0x56394195ba65]
+4       0x56394197fb93 bin/http-server(+0x2db93) [0x56394197fb93]
+3       0x56394197dee5 bin/http-server(+0x2bee5) [0x56394197dee5]
+2       0x56394195de49 bin/http-server(+0xbe49) [0x56394195de49]
+1       0x7f73994ca49f accept + 79
+0       0x7f73994cb3c0 /lib/x86_64-linux-gnu/libpthread.so.0(+0x153c0) [0x7f73994cb3c0]
+2020-12-05 08:06:45.166 (  61.416s) [main thread     ]                       :0     FATL| Signal: SIGINT
+
+
+
+
+
+arguments: bin/http-server -p 5000 -V
+Current dir: /home/ashwin/HTTP-file-sharing
+File verbosity level: 9
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2020-12-05 08:09:57.233 (   0.000s) [main thread     ]             loguru.cpp:826   INFO| Logging to 'http-server.log', mode: 'a', verbosity: 9
+2020-12-05 08:09:57.233 (   0.000s) [main thread     ]         tcp_server.cpp:55    INFO| Created TCP server at port 5000. fd = 4
+Stack trace:
+7       0x556c2d091c5e bin/http-server(+0x9c5e) [0x556c2d091c5e]
+6       0x7f4b718230b3 __libc_start_main + 243
+5       0x556c2d091a65 bin/http-server(+0x9a65) [0x556c2d091a65]
+4       0x556c2d0b5b93 bin/http-server(+0x2db93) [0x556c2d0b5b93]
+3       0x556c2d0b3ee5 bin/http-server(+0x2bee5) [0x556c2d0b3ee5]
+2       0x556c2d093e49 bin/http-server(+0xbe49) [0x556c2d093e49]
+1       0x7f4b71a0249f accept + 79
+0       0x7f4b71a033c0 /lib/x86_64-linux-gnu/libpthread.so.0(+0x153c0) [0x7f4b71a033c0]
+2020-12-05 08:10:04.376 (   7.143s) [main thread     ]                       :0     FATL| Signal: SIGINT
