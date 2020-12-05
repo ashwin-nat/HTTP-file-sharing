@@ -1,8 +1,15 @@
 #include "process_request.hpp"
 #include "http.hpp"
 #include "filesys.hpp"
+#include "prog_options.hpp"
+#include <sstream>
+
+#define _LAST_N_BITS_SET(n)             ((2 << ((n)-1))-1)
+
+extern ProgOptions prog_options;
 
 static void process_get_request (HTTPRequest &req, HTTPResponse &rsp);
+static std::string _bytes_human_readable (size_t bytes);
     
 HTTPStatus build_rsp_html (std::vector<char> &buffer, HTTPRequest &req, 
     std::vector <FSEntry> &tree);
@@ -29,13 +36,13 @@ process_request (
     const std::string src = connection->get_src_addr();
     // const std::string hello = "Hello world";
     const std::string fail = "Unsupported HTTP method";
-    std::cout << "Received request from " << src << std::endl;
     HTTPResponse rsp;
     rsp.m_content_type = "text/plain";
 
     ssize_t bytes;
     if(req.m_method == "GET") {
-        std::cout << "\tGET " << req.m_uri << std::endl;
+        std::cout << "Received request from " << src << ": ";
+        std::cout << "GET " << req.m_uri << std::endl;
         process_get_request (req, rsp);
     }
     else {
@@ -43,7 +50,11 @@ process_request (
         rsp.m_status = HTTPStatus::HTTP_UNSUPP_METHOD;
     }
     bytes = send_http_rsp (connection, rsp);
-    std::cout << "Sent " << bytes << " to " << src << std::endl;
+    std::cout << "Sent response of " << _bytes_human_readable (bytes) << 
+        " to " << src << std::endl;
+    if (prog_options.verbose) {
+        std::cout << "Content-Type: " << rsp.m_content_type << std::endl;
+    }
     return true;
 }
 
@@ -55,14 +66,12 @@ process_get_request (
     std::vector<char> rspbuff;
     //if request is a file, serve the file
     if (is_file (req.m_uri)) {
-        // const std::string file = "Coming soon....";
-        // rsp.m_status = HTTPStatus::HTTP_OK;
-        // rsp.set_body (file.c_str(), file.size());
 
         rsp.m_status = get_file (rsp, req);
         if (rsp.m_status == HTTPStatus::HTTP_NOT_FOUND) {
             get_404_page (req, rspbuff);
             rsp.set_body (rspbuff.data(), rspbuff.size());
+            rsp.m_content_type = "text/html; charset=utf-8";
         }
     }
     else {
@@ -85,4 +94,29 @@ process_get_request (
             rsp.m_content_type = "text/html; charset=utf-8";
         }
     }
+}
+
+static std::string 
+_bytes_human_readable (
+    size_t bytes)
+{
+    static const std::vector<std::string> sizes = { "B", "kB", "MB", "GB", "TB"};
+    size_t order = 0;
+    size_t quot=bytes, rem=0;
+
+    while (quot > 1024) {
+        //bit shift for fun, basically rem = quot%1024
+        rem = quot & (_LAST_N_BITS_SET(10));
+        //bit shift for fun, basically quot = quot/1024
+        quot = quot >> 10;
+        order++;
+    }
+
+    std::string ret = std::to_string (quot) + "." + std::to_string (rem);
+    if (order >= sizes.size()) {
+        order = sizes.size()-1;
+    }
+
+    ret += " " + sizes[order];
+    return ret;
 }

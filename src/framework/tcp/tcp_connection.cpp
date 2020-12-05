@@ -1,4 +1,5 @@
 #include "tcp.hpp"
+#include "prog_options.hpp"
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <cstring>
@@ -6,6 +7,8 @@
 #include <sys/sendfile.h>
 /******************************************************************************/
 #define DEFAULT_BUFFER_SIZE     2048
+/******************************************************************************/
+extern ProgOptions prog_options;
 /******************************************************************************/
 class FILE_RAII {
 private:
@@ -41,7 +44,9 @@ TCPConnection :: TCPConnection (
 {
     m_fd = fd;
     m_addr = addr;
-    std::cout << "New TCP connection. fd = " << fd << std::endl;
+    if (prog_options.verbose) {
+        std::cout << "New TCP connection. fd = " << fd << std::endl;
+    }
 }
 
 /**
@@ -49,7 +54,10 @@ TCPConnection :: TCPConnection (
  */
 TCPConnection :: ~TCPConnection (void)
 {
-    std::cout << "Destroying TCP connection with fd = " << m_fd << std::endl;
+    if (prog_options.verbose) {
+        std::cout << "Destroying TCP connection with fd = " << m_fd 
+            << std::endl;
+    }
     close (m_fd);
     m_fd = -1;
     std::memset (&m_addr, 0, sizeof(m_addr));

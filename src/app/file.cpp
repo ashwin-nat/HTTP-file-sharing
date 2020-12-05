@@ -1,8 +1,8 @@
 #include "http.hpp"
-// #include <fstream>
 #include <iostream>
-// #include <sstream>
 #include <sys/stat.h>
+
+static bool _is_text_file (const std::string &filename);
 
 HTTPStatus 
 get_file (
@@ -10,14 +10,10 @@ get_file (
     HTTPRequest &req)
 {
     std::string filename;
+    //skip first character since it's a /
     for (unsigned int index=1; index<req.m_uri.size(); ++index) {
         filename += req.m_uri[index];
     }
-    //check if file exists
-    // std::ifstream file (filename);
-    // if (file.is_open()==false) {
-    //     return HTTPStatus::HTTP_NOT_FOUND;
-    // }
 
     struct stat stat_buf;
     if (stat (filename.c_str(), &stat_buf) == -1) {
@@ -28,12 +24,46 @@ get_file (
     rsp.m_rsp_filename = filename;
     rsp.m_len = stat_buf.st_size;
 
-    // std::ostringstream ss;
-    // ss << file.rdbuf();
-
-    // for (auto &ch : ss.str()) {
-    //     buffer.push_back (ch);
-    // }
+    //set content type
+    if (_is_text_file (filename)) {
+        rsp.m_content_type = "text/plain";
+    }
+    else {
+        rsp.m_content_type = "application/octet-stream";
+    }
 
     return HTTPStatus::HTTP_OK;
+}
+
+static bool 
+_is_text_file (
+    const std::string &filename)
+{
+    //find position of extension
+    size_t pos = filename.rfind ('.');
+    //if no extension, we'll consider it a text file
+    if (std::string::npos == pos) {
+        return true;
+    }
+
+    //build string with extension
+    std::string extension;
+    for (; pos<filename.size(); ++pos) {
+        extension += filename[pos];
+    }
+
+    static const std::vector<std::string> supported_text_file_types = {
+        ".txt", ".log", ".ini", ".cfg", ".conf", ".cpp", ".hpp",
+        ".c", ".h", ".py", ".sh", ".java", ".js",
+    };
+
+    bool ret=false;
+    for (auto &it : supported_text_file_types) {
+        if (it == extension) {
+            ret = true;
+            break;
+        }
+    }
+
+    return ret;
 }

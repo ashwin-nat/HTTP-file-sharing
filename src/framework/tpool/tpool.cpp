@@ -1,4 +1,5 @@
 #include "tpool.hpp"
+#include <stdexcept>
 
 /**
  * @brief       - Construct a new TPool object with specified number of 
@@ -8,6 +9,10 @@
 TPool :: TPool (
     unsigned int count)
 {
+    if (count > TPOOL_MAX_WORKERS) {
+        throw std::invalid_argument ("max supported thread pool workers is " + 
+                std::to_string(TPOOL_MAX_WORKERS));
+    }
     for (unsigned int i=0; i<count; ++i) {
         m_pool.push_back (std::thread (&TPool::_tpool_worker_fn, this, i+1));
     }

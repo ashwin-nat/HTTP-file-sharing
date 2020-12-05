@@ -1,11 +1,14 @@
 #include "tcp.hpp"
+#include "prog_options.hpp"
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <stdexcept>
 #include <cstring>
 #include <cerrno>
 /******************************************************************************/
-static void _raise_exception (void);
+extern ProgOptions prog_options;
+/******************************************************************************/
+static void _raise_exception (const std::string &msg);
 /******************************************************************************/
 /**
  * @brief       - Construct a new TCPServer object
@@ -26,7 +29,7 @@ TCPServer :: TCPServer (
     int opt = 1;
     if(setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
         close(m_fd);
-        _raise_exception ();
+        _raise_exception ("setsockopt failed");
     }
 
     //bind to the local ipv4 addr and given port
@@ -37,17 +40,20 @@ TCPServer :: TCPServer (
 
     if(bind(m_fd, reinterpret_cast<sockaddr*> (&addr), sizeof(addr)) == -1) {
         close(m_fd);
-        _raise_exception();
+        _raise_exception("bind failed");
     }
 
     //setup connection backlog
     if(listen(m_fd, backlog) == -1) {
         close(m_fd);
-        _raise_exception();
+        _raise_exception("listen failed");
     }
 
     m_port = port;
-    std::cout << "Created TCP server at port " << m_port << ". fd = " << m_fd << std::endl;
+    if (prog_options.verbose) {
+        std::cout << "Created TCP server at port " << m_port 
+            << ". fd = " << m_fd << std::endl;
+    }
 }
 
 /**
@@ -55,7 +61,9 @@ TCPServer :: TCPServer (
  */
 TCPServer :: ~TCPServer (void)
 {
-    std::cout << "Destroying TCP server with fd = " << m_fd << std::endl;
+    if (prog_options.verbose) {
+        std::cout << "Destroying TCP server with fd = " << m_fd << std::endl;
+    }
     close (m_fd);
     m_port = 0;
     m_fd = -1;
@@ -114,7 +122,8 @@ TCPServer :: accept_connection (void)
 }
 
 static void 
-_raise_exception (void)
+_raise_exception (
+    const std::string &msg)
 {
-    throw std::invalid_argument (strerror(errno));
+    throw std::invalid_argument (msg + ". " + strerror(errno));
 }

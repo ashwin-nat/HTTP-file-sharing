@@ -4,6 +4,7 @@
 #include "http_status.hpp"
 #include <string>
 #include <vector>
+#include <chrono>
 
 struct HTTPResponse {
 public:
@@ -13,6 +14,7 @@ public:
     std::vector<char> m_body;
 
     std::string m_rsp_filename;
+    // std::chrono::duration<double> m_time_taken;
 
     /**
      * @brief           - Copy to the response body

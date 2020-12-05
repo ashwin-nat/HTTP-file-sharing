@@ -1,7 +1,6 @@
 #include "http.hpp"
 #include <poll.h>
 #include <assert.h>
-
 /******************************************************************************/
 #define CHAR_CR         '\r'
 #define CHAR_LF         '\n'

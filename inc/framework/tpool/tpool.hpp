@@ -9,6 +9,8 @@
 #include <queue>
 #include <mutex>
 
+#define TPOOL_MAX_WORKERS       10
+
 struct _TPool_job {
     void (*fn_ptr) (std::shared_ptr<TCPConnection>) = nullptr;
     std::shared_ptr<TCPConnection> connection = nullptr;
@@ -17,7 +19,6 @@ struct _TPool_job {
 class TPool {
 private:
     std::vector<std::thread> m_pool;
-    // std::queue<std::shared_ptr<TCPConnection>> m_queue;
     std::queue<_TPool_job> m_queue;
     std::mutex m_queue_mutex;
     Semaphore m_sem;
