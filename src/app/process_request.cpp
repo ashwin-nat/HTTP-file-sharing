@@ -42,8 +42,16 @@ process_request (
 
     ssize_t bytes;
     if(req.m_method == "GET") {
-        LOG_S(INFO) << "Received request from " << src << ": ";
-        LOG_S(INFO) << "GET " << req.m_uri;
+	std::stringstream ss;
+        ss << "Received request from " << src << ": ";
+        ss << "GET " << req.m_uri;
+
+	auto result = req.m_header.find ("User-Agent");
+	if (result != req.m_header.end()) {
+		ss << result->first << ": " << 
+			result->second;
+	}
+	LOG_S(INFO) << ss.str();
         process_get_request (req, rsp);
     }
     else {
