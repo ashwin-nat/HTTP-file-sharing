@@ -44,7 +44,7 @@ process_request (
     if(req.m_method == "GET") {
 	std::stringstream ss;
         ss << "Received request from " << src << ": ";
-        ss << "GET " << req.m_uri;
+        ss << "GET " << req.m_uri << " ";
 
 	auto result = req.m_header.find ("User-Agent");
 	if (result != req.m_header.end()) {
