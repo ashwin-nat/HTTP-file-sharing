@@ -23,6 +23,7 @@ ProgOptions :: parse (
             -h: help
             -b: TCP backlog size
             -l: set log file
+            -D: set DB file
     */
 
     while ((opt = getopt (argc, argv, "d:p:Vht:vl:")) != -1) {
@@ -48,6 +49,9 @@ ProgOptions :: parse (
             break;
         case 'l':
             log_file = optarg;
+            break;
+        case 'D':
+            db_file = optarg;
             break;
         //loguru uses this
         case 'v':
@@ -76,6 +80,10 @@ ProgOptions :: print_values (void)
             std::endl;
         if (!log_file.empty()) {
             std::cout << PREFIX_SPACES << "Log file = " << log_file << 
+                std::endl;
+        }
+        if (!db_file.empty()) {
+            std::cout << PREFIX_SPACES << "Database file = " << db_file << 
                 std::endl;
         }
     }

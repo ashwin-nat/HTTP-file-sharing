@@ -10,6 +10,7 @@ struct ProgOptions {
     unsigned int tpool_size=5;
     int tcp_backlog_size=5;
     std::string log_file;
+    std::string db_file;
 
     bool 
     parse (
