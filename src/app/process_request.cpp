@@ -56,10 +56,14 @@ process_request (
     else {
         rsp.set_body (fail.c_str(), fail.size());
         rsp.m_status = HTTPStatus::HTTP_UNSUPP_METHOD;
+        
+        LOG_S(WARNING) << "Received " << req.m_method << " request from" << src;
     }
     bytes = send_http_rsp (connection, rsp);
-    LOG_S(INFO) << "Sent response of " << _bytes_human_readable (bytes) << 
-        " to " << src << ". Status = " << http::to_string (rsp.m_status);
+    if (bytes > 0 ) {
+        LOG_S(INFO) << "Sent response of " << _bytes_human_readable (bytes) << 
+            " to " << src << ". Status = " << http::to_string (rsp.m_status);
+    }
     if (prog_options.verbose) {
         LOG_S(INFO) << "Content-Type: " << rsp.m_content_type;
     }
