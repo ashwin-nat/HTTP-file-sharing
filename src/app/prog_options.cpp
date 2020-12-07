@@ -26,7 +26,7 @@ ProgOptions :: parse (
             -D: set DB file
     */
 
-    while ((opt = getopt (argc, argv, "d:p:Vht:vl:")) != -1) {
+    while ((opt = getopt (argc, argv, "d:p:Vht:vl:D:")) != -1) {
         switch (opt) {
         //set directory
         case 'd':
