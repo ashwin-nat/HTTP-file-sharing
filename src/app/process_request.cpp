@@ -42,16 +42,16 @@ process_request (
 
     ssize_t bytes;
     if(req.m_method == "GET") {
-	std::stringstream ss;
+	    std::stringstream ss;
         ss << "Received request from " << src << ": ";
         ss << "GET " << req.m_uri << " ";
 
-	auto result = req.m_header.find ("User-Agent");
-	if (result != req.m_header.end()) {
-		ss << result->first << ": " << 
-			result->second;
-	}
-	LOG_S(INFO) << ss.str();
+        auto result = req.m_header.find ("User-Agent");
+        if (result != req.m_header.end()) {
+            ss << result->first << ": " << 
+                result->second;
+        }
+        LOG_S(INFO) << ss.str();
         process_get_request (req, rsp);
     }
     else {
@@ -60,7 +60,7 @@ process_request (
     }
     bytes = send_http_rsp (connection, rsp);
     LOG_S(INFO) << "Sent response of " << _bytes_human_readable (bytes) << 
-        " to " << src;
+        " to " << src << ". Status = " << http::to_string (rsp.m_status);
     if (prog_options.verbose) {
         LOG_S(INFO) << "Content-Type: " << rsp.m_content_type;
     }
@@ -127,5 +127,8 @@ _bytes_human_readable (
     }
 
     ret += " " + sizes[order];
+    if (order > 0) {
+        ret += " (" + std::to_string (bytes) + " B)";
+    }
     return ret;
 }
