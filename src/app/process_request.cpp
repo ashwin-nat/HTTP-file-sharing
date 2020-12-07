@@ -35,7 +35,6 @@ process_request (
     }
 
     const std::string src = connection->get_src_addr();
-    // const std::string hello = "Hello world";
     const std::string fail = "Unsupported HTTP method";
     HTTPResponse rsp;
     rsp.m_content_type = "text/plain";
