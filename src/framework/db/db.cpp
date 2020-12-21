@@ -34,6 +34,7 @@ db_handle :: db_handle (const std::string &filename)
     }
     m_stmt = nullptr;
     m_is_open = true;
+    m_ongoing_transaction = false;
 }
 
 /**
@@ -150,6 +151,7 @@ int db_handle :: get_str (int col, std::string &result)
 int
 db_handle :: start_transaction (void)
 {
+    m_ongoing_transaction = true;
     return sqlite3_exec(m_hdl, "BEGIN", nullptr, nullptr, nullptr);
 }
 
@@ -160,6 +162,7 @@ db_handle :: start_transaction (void)
 int 
 db_handle :: end_transaction (void)
 {
+    m_ongoing_transaction = false;
     return sqlite3_exec(m_hdl, "COMMIT", nullptr, nullptr, nullptr);
 }
 
@@ -174,6 +177,16 @@ db_handle :: exec_query (
 {
     return sqlite3_exec (m_hdl, query.c_str(), nullptr, nullptr, nullptr);
 }
+
+/**
+ * @brief       - Reset a prepared statement
+ * @return int  - sqlite3 return code
+ */
+int 
+db_handle :: reset_stmt (void)
+{
+    return sqlite3_reset (m_stmt);
+}
 /******************************************************************************/
 /* Private functions */
 /**
@@ -184,6 +197,9 @@ void
 db_handle :: cleanup (void)
 {
     if (m_is_open) {
+        if (m_ongoing_transaction) {
+            end_transaction();
+        }
         if (m_stmt) {
             sqlite3_finalize (m_stmt);
         }

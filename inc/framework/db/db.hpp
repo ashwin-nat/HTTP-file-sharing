@@ -11,6 +11,7 @@ class db_handle {
         sqlite3 *m_hdl;
         sqlite3_stmt *m_stmt;
         bool m_is_open;
+        bool m_ongoing_transaction;
 
         /**
          * @brief - Performs cleanup, frees resources, closes handles
@@ -111,6 +112,12 @@ class db_handle {
         int
         exec_query (
             const std::string &query);
+        /**
+         * @brief       - Reset a prepared statement
+         * @return int  - sqlite3 return code
+         */
+        int 
+        reset_stmt (void);
 };
 
 #endif  //__DB_HPP__

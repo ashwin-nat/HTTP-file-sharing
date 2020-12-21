@@ -35,7 +35,7 @@ BINNAME		= http-server
 CFLAGS		= -Wall -std=c++17 -Wshadow -DLOGURU_WITH_STREAMS
 CFLAGS_SAN	= -fsanitize=address -fsanitize=undefined
 CFLAGS_DBG	= -Og -g -ggdb3
-CFLAGS_REL	= -O2 -Werror
+CFLAGS_REL	= -O2 -Werror -DNDEBUG
 
 LDFLAGS		= -lstdc++fs -pthread -ldl -lsqlite3
 LDFLAGS_DBG	=

@@ -38,7 +38,8 @@ update_db_stats (
         return;
     }
 
-    update_stats_list_blacklist (srcaddr, (status == HTTPStatus::HTTP_OK));
+    const bool good_request = (status == HTTPStatus::HTTP_OK);
+    update_stats_list_blacklist (srcaddr, good_request);
 }
 
 static std::string 
