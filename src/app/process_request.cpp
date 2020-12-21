@@ -54,7 +54,6 @@ process_request (
                 result->second;
         }
         LOG_S(INFO) << ss.str();
-        const std::string src = connection->get_src_addr();
         process_get_request (req, rsp, src);
     }
     else {
