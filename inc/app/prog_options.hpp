@@ -11,6 +11,7 @@ struct ProgOptions {
     int tcp_backlog_size=5;
     std::string log_file;
     std::string db_file;
+    int blacklist_threshold=-15;
 
     bool 
     parse (

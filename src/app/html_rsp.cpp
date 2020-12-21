@@ -10,12 +10,14 @@ static std::string _get_parent_dir (std::string &path);
 static void _get_back_links (std::stringstream &ss, std::string &parent);
 static void __get_vector_of_path_nodes (std::string &parent, 
         std::vector<std::string> &path_nodes);
+static void __fill_src_addr (std::stringstream &ss, const std::string &src);
 
 HTTPStatus 
 build_rsp_html (
     std::vector<char> &buffer, 
     HTTPRequest &req,
-    std::vector <FSEntry> &tree)
+    std::vector <FSEntry> &tree,
+    const std::string &src)
 {
     HTTPStatus ret = HTTPStatus::HTTP_OK;
     std::stringstream ss;
@@ -41,6 +43,9 @@ build_rsp_html (
     _fill_html_body (ss, tree, req.m_uri);
 
     ss << "<hr>" << CHAR_LF;
+
+    __fill_src_addr (ss, src);
+
     ss << "</body>" << CHAR_LF;
     ss << "</html>" << CHAR_LF;
 
@@ -54,7 +59,8 @@ build_rsp_html (
 void 
 get_404_page (
     HTTPRequest &req, 
-    std::vector<char> &buffer)
+    std::vector<char> &buffer,
+    const std::string &src)
 {
     std::stringstream ss;
     ss << "<html>" << CHAR_LF;
@@ -72,6 +78,9 @@ get_404_page (
     ss << "<a href=\"/\"" << "> Home page" << "</a> <br>" << CHAR_LF;
 
     ss << "<hr>" << CHAR_LF;
+
+    __fill_src_addr (ss, src);
+
     ss << "</body>" << CHAR_LF;
     ss << "</html>" << CHAR_LF;
 
@@ -178,4 +187,9 @@ __get_vector_of_path_nodes (
             temp += parent[index];
         }
     }
+}
+
+static void __fill_src_addr (std::stringstream &ss, const std::string &src)
+{
+    ss << "Your IP address is " << src << "<br>" << CHAR_LF;
 }

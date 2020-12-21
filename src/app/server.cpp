@@ -2,6 +2,7 @@
 #include "main.hpp"
 #include "http.hpp"
 #include "process_request.hpp"
+#include "blacklist.hpp"
 #include "tpool.hpp"
 #include "loguru.hpp"
 #include <chrono>
@@ -27,6 +28,15 @@ server_loop (
     while (1) {
         auto connection = server.accept_connection ();
         if (connection) {
+            //check if the connection is blacklisted
+            const std::string src = connection->get_src_addr();
+            if (is_ipaddr_blacklisted(src)) {
+                LOG_S(INFO) << "Dropping connection from blacklisted IP addr " 
+                    << src;
+                continue;
+            }
+
+            //else process the request
             tpool.add_job (_handle_connection, connection);
         }
     }
@@ -39,7 +49,7 @@ _handle_connection (
     std::vector<std::string> lines;
     HTTPRequest req;
     while (1) {
-        const std::string src = connection->get_src_addr();
+
         req.clear();
         auto bytes = recv_req (connection, lines);
         if (bytes == HTTP_CLIENT_DISCONNECTED) {

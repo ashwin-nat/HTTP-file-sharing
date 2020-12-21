@@ -2,6 +2,7 @@
 #include "db.hpp"
 #include "prog_options.hpp"
 #include "loguru.hpp"
+#include "blacklist.hpp"
 
 #define _INCREMENT_BY_ONE       "+1"
 #define _DECREMENT_BY_ONE       "-1"
@@ -36,6 +37,8 @@ update_db_stats (
             db.get_errmsg();
         return;
     }
+
+    update_stats_list_blacklist (srcaddr, (status == HTTPStatus::HTTP_OK));
 }
 
 static std::string 

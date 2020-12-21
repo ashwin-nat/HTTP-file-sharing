@@ -1,7 +1,9 @@
 #include "filesys.hpp"
+#include "prog_options.hpp"
 #include "loguru.hpp"
 #include <filesystem>
 #include <iostream>
+#include <limits.h>
 
 namespace fs = std::filesystem;
 
@@ -23,7 +25,10 @@ get_file_listing (
     std::vector<FSEntry> &vec)
 {
     std::string temp_path = _cook_path (path);
-
+    if (temp_path.size() >= PATH_MAX) {
+        LOG_S(ERROR) << "Path is too long. len=" << temp_path.size();
+        return false;
+    }
     return _get_filesys_structure (temp_path, vec);
 }
 
@@ -57,7 +62,10 @@ _cook_path (
 std::string
     _get_cwd (void)
 {
-    return fs::current_path().string();
+    // return fs::current_path().string();
+    //since we keep the updated working directory in prog_options
+    extern ProgOptions prog_options;
+    return prog_options.dir;
 }
 
 std::string

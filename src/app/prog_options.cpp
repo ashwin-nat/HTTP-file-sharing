@@ -24,9 +24,10 @@ ProgOptions :: parse (
             -b: TCP backlog size
             -l: set log file
             -D: set DB file
+            -T: blacklist threshold
     */
 
-    while ((opt = getopt (argc, argv, "d:p:Vht:vl:D:")) != -1) {
+    while ((opt = getopt (argc, argv, "d:p:Vht:vl:D:T:")) != -1) {
         switch (opt) {
         //set directory
         case 'd':
@@ -53,6 +54,10 @@ ProgOptions :: parse (
         case 'D':
             db_file = optarg;
             break;
+        case 'T':
+            blacklist_threshold = std::stoi (optarg);
+            break;
+
         //loguru uses this
         case 'v':
             break;

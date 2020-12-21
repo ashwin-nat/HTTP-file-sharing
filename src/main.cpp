@@ -5,6 +5,7 @@
 #include "prog_options.hpp"
 #include "loguru.hpp"
 #include "init.hpp"
+#include "blacklist.hpp"
 
 namespace fs = std::filesystem;
 
@@ -19,6 +20,7 @@ int main (int argc, char *argv[])
 
     init_loguru (argc, argv);
     init_db (argc, argv);
+    init_blacklist ();
 
     //set working directory
     if (prog_options.dir != ".") {
@@ -31,6 +33,10 @@ int main (int argc, char *argv[])
                 err.message();
             return 1;
         }
+    }
+    else {
+        //update the working directory
+        prog_options.dir = fs::current_path().string();
     }
 
     prog_options.print_values ();

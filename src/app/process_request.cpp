@@ -10,12 +10,14 @@
 
 extern ProgOptions prog_options;
 
-static void process_get_request (HTTPRequest &req, HTTPResponse &rsp);
+static void process_get_request (HTTPRequest &req, HTTPResponse &rsp, 
+    const std::string &src);
 static std::string _bytes_human_readable (size_t bytes);
     
 HTTPStatus build_rsp_html (std::vector<char> &buffer, HTTPRequest &req, 
-    std::vector <FSEntry> &tree);
-void get_404_page (HTTPRequest &req, std::vector<char> &buffer);
+    std::vector <FSEntry> &tree, const std::string &src);
+void get_404_page (HTTPRequest &req, std::vector<char> &buffer,
+    const std::string &src);
 HTTPStatus get_file (HTTPResponse &rsp, HTTPRequest &req);
 
 /**
@@ -52,7 +54,8 @@ process_request (
                 result->second;
         }
         LOG_S(INFO) << ss.str();
-        process_get_request (req, rsp);
+        const std::string src = connection->get_src_addr();
+        process_get_request (req, rsp, src);
     }
     else {
         rsp.set_body (fail.c_str(), fail.size());
@@ -76,7 +79,8 @@ process_request (
 static void 
 process_get_request (
     HTTPRequest &req,
-    HTTPResponse &rsp)
+    HTTPResponse &rsp,
+    const std::string &src)
 {
     std::vector<char> rspbuff;
     //if request is a file, serve the file
@@ -84,7 +88,7 @@ process_get_request (
 
         rsp.m_status = get_file (rsp, req);
         if (rsp.m_status == HTTPStatus::HTTP_NOT_FOUND) {
-            get_404_page (req, rspbuff);
+            get_404_page (req, rspbuff, src);
             rsp.set_body (rspbuff.data(), rspbuff.size());
             rsp.m_content_type = "text/html; charset=utf-8";
         }
@@ -95,20 +99,22 @@ process_get_request (
         if (get_file_listing (req.m_uri, tree) == false) {
             if (errno == ENOENT) {
                 rsp.m_status = HTTPStatus::HTTP_NOT_FOUND;
-                get_404_page (req, rspbuff);
+                get_404_page (req, rspbuff, src);
             }
             else {
                 rsp.m_status = HTTPStatus::HTTP_GEN_ERR;
             }
         }
         else {
-            rsp.m_status = build_rsp_html (rspbuff, req, tree);
+            rsp.m_status = build_rsp_html (rspbuff, req, tree, src);
         }
         if (rspbuff.size() > 0) {
             rsp.set_body (rspbuff.data(), rspbuff.size());
             rsp.m_content_type = "text/html; charset=utf-8";
         }
     }
+
+
 }
 
 static std::string 
