@@ -38,13 +38,14 @@ bool is_ipaddr_blacklisted (const std::string &ipaddr)
     return true;
 }
 
-void update_stats_list_blacklist (const std::string &ipaddr, bool good_request)
+bool update_stats_list_blacklist (const std::string &ipaddr, bool good_request)
 {
     ACQUIRE_WR_LOCK();
     auto result = _stats_list.find (ipaddr);
 
     if (result == _stats_list.end()) {
         _stats_list.emplace (ipaddr, 1);
+        return false;
     }
     else {
         int offset = (good_request) ? (1) : (-1);
@@ -57,7 +58,19 @@ void update_stats_list_blacklist (const std::string &ipaddr, bool good_request)
             _blacklist.emplace (result->first);
             LOG_S(INFO) << "Blacklisting IP address " << ipaddr;
         }
+        return true;
     }
+}
+
+bool get_score_for_ipaddr (const std::string &ipaddr, int score)
+{
+    ACQUIRE_RD_LOCK();
+    auto result = _stats_list.find (ipaddr);
+
+    if (result != _stats_list.end()) {
+        score = result->second;
+    }
+    return false;
 }
 
 static void

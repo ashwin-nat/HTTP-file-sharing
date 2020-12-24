@@ -4,6 +4,7 @@
 #include "loguru.hpp"
 #include "prog_options.hpp"
 #include "db_stats.hpp"
+#include "blacklist.hpp"
 #include <sstream>
 
 #define _LAST_N_BITS_SET(n)             ((2 << ((n)-1))-1)
@@ -65,8 +66,12 @@ process_request (
 
     bytes = send_http_rsp (connection, rsp);
     if (bytes > 0 ) {
+        int score=0;
         LOG_S(INFO) << "Sent response of " << _bytes_human_readable (bytes) << 
-            " to " << src << ". Status = " << http::to_string (rsp.m_status);
+            " to " << src << ". Status = " << http::to_string (rsp.m_status) << 
+            ((get_score_for_ipaddr(src, score)==true) ? 
+            std::string (" with score=" + std::to_string(score)) : 
+            std::string ("") );
     }
     if (prog_options.verbose) {
         LOG_S(INFO) << "Content-Type: " << rsp.m_content_type;

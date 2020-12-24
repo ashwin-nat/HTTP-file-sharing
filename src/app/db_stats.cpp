@@ -18,28 +18,54 @@ update_db_stats (
 {
     db_handle db(prog_options.db_file);
     bool success = (status == HTTPStatus::HTTP_OK) ? (true) : (false);
+    db.start_transaction();
 
-    const std::string query = _build_stats_query (success);
-    if (db.prepare_stmt (query) != SQLITE_OK) {
-        LOG_S(ERROR) << "Query " << query << " failed in prepare_stmt." << 
+    //update the stats table
+    const std::string query_stats = _build_stats_query (success);
+    if (db.prepare_stmt (query_stats) != SQLITE_OK) {
+        LOG_S(ERROR) << "Query " << query_stats << " failed in prepare_stmt." << 
             " error = " << db.get_errmsg();
         return;
     }
 
     if (db.bind_string (1, srcaddr) != SQLITE_OK) {
-        LOG_S(ERROR) << "Query " << query << " failed in bind. error = " << 
+        LOG_S(ERROR) << "Query " << query_stats << " failed in bind. error = " << 
             db.get_errmsg();
         return;
     }
 
     if (db.step () != SQLITE_DONE) {
-        LOG_S(ERROR) << "Query " << query << " failed in step. error = " << 
+        LOG_S(ERROR) << "Query " << query_stats << " failed in step. error = " << 
             db.get_errmsg();
         return;
     }
 
-    const bool good_request = (status == HTTPStatus::HTTP_OK);
-    update_stats_list_blacklist (srcaddr, good_request);
+    if(update_stats_list_blacklist (srcaddr, success) == false) {
+
+        //if false is returned, then the ip addr is now blacklisted
+        db.reset_stmt();
+        const std::string blacklist_query = 
+            "INSERT or IGNORE into blacklist(ipaddr) values (?)";
+        
+        if (db.prepare_stmt (blacklist_query) != SQLITE_OK) {
+            LOG_S(ERROR) << "Query " << query_stats << 
+                " failed in prepare_stmt." << " error = " << db.get_errmsg();
+            return;
+        }
+
+        if (db.bind_string (1, srcaddr) != SQLITE_OK) {
+            LOG_S(ERROR) << "Query " << query_stats << 
+                " failed in bind. error = " << db.get_errmsg();
+            return;
+        }
+
+        if (db.step () != SQLITE_DONE) {
+            LOG_S(ERROR) << "Query " << query_stats << 
+                " failed in step. error = " << db.get_errmsg();
+            return;
+        }
+    }
+    db.end_transaction();
 }
 
 static std::string 
