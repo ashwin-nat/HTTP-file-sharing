@@ -1,4 +1,6 @@
 #include "http.hpp"
+#include "loguru.hpp"
+#include <cstring>
 #include <poll.h>
 #include <assert.h>
 /******************************************************************************/
@@ -109,10 +111,17 @@ send_http_rsp (
     rsp.build_rsp (rspbuff);
     assert (rsp.m_status != HTTPStatus::HTTP_GEN_ERR);
     ret = client->send (rspbuff);
+    if (ret == -1) {
+        LOG_S(ERROR) << "send() failed with error=" << strerror(errno);
+	return ret;
+    }
 
     if (!rsp.m_rsp_filename.empty()) {
         //send the file as well
         ret += client->send (rsp.m_rsp_filename, rsp.m_len);
+	if (ret == -1) {
+	    LOG_S(ERROR) << "send() failed with error=" << strerror(errno);
+        }
     }
     return ret;
 }

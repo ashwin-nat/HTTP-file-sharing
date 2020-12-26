@@ -1,5 +1,6 @@
 #include <iostream>
 #include <filesystem>
+#include <signal.h>
 #include "server.hpp"
 #include "filesys.hpp"
 #include "prog_options.hpp"
@@ -42,6 +43,7 @@ int main (int argc, char *argv[])
     prog_options.print_values ();
     executable_file_name = argv[0];
 
+    signal(SIGPIPE, SIG_IGN);
     server_loop (prog_options.port, prog_options.tcp_backlog_size, 
         prog_options.tpool_size);
 

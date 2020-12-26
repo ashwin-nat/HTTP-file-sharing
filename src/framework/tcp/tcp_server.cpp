@@ -117,7 +117,7 @@ TCPServer :: accept_connection (void)
     if (fd == -1) {
         return nullptr;
     }
-    
+
     auto ret = std::make_shared <TCPConnection>(fd, src);
     return ret;
 }
