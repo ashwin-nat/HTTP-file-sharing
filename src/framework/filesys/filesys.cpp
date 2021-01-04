@@ -52,6 +52,28 @@ is_file (
     }
 }
 
+/**
+ * @brief       - Get the sizeof the file
+ * @param filepath - path to the file
+ * @param result    - Ref to the variable where result is to be stored
+ * @return true     - operation successful
+ * @return false    - operation failure
+ */
+bool 
+get_file_size (
+    const std::string &filepath,
+    size_t &result)
+{
+    std::error_code err, good;
+
+    auto size = fs::file_size(filepath, err);
+    if (err == good) {
+        result = size;
+        return true;
+    }
+    return false;
+}
+
 std::string 
 _cook_path (
     const std::string &path)

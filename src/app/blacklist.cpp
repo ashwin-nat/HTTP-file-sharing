@@ -56,7 +56,8 @@ bool update_stats_list_blacklist (const std::string &ipaddr, bool good_request)
             assert (_blacklist.find (ipaddr) != _blacklist.end());
 
             _blacklist.emplace (result->first);
-            LOG_S(INFO) << "Blacklisting IP address " << ipaddr;
+            LOG_S(INFO) << "Blacklisting IP address " << ipaddr << " score=" << 
+                result->second;
         }
         return true;
     }

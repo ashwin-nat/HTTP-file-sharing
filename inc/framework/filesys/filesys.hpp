@@ -32,4 +32,15 @@ bool
 is_file (
     const std::string &path);
 
+/**
+ * @brief       - Get the sizeof the file
+ * @param filepath - path to the file
+ * @return true     - operation successful
+ * @return false    - operation failure
+ */
+bool 
+get_file_size (
+    const std::string &filepath,
+    size_t &result);
+
 #endif  //__FILESYS_HPP__
