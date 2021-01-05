@@ -33,12 +33,14 @@ bool
 HTTPResponse :: build_rsp (
     std::vector<char> &buffer)
 {
-    if (m_status == HTTPStatus::HTTP_GEN_ERR || 
-            m_len == 0 || 
-            m_content_type.empty() ||
-            m_body.empty()) {
-        
+    if (m_status == HTTPStatus::HTTP_GEN_ERR) {
         return false;
+    }
+    //if not a file
+    if (m_rsp_filename.empty()) {
+        if (m_len == 0 || m_content_type.empty() || m_body.empty()) {
+            return false;
+        }
     }
 
     std::string crlf;

@@ -119,8 +119,8 @@ send_http_rsp (
     if (!rsp.m_rsp_filename.empty()) {
         //send the file as well
         ret += client->send (rsp.m_rsp_filename, rsp.m_len);
-	if (ret == -1) {
-	    LOG_S(ERROR) << "send() failed with error=" << strerror(errno);
+        if (ret == -1) {
+            LOG_S(ERROR) << "send() failed with error=" << strerror(errno);
         }
     }
     return ret;

@@ -117,6 +117,11 @@ _fill_html_body (
         if (it.is_dir) {
             ss << "/";
         }
+        //add file size to files
+        else {
+            const std::string &_size_str = bytes_human_readable (it.file_size);
+            ss << " (" << _size_str << ")";
+        }
         ss << "</a> </li>" << CHAR_LF;
     }
 

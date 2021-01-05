@@ -5,6 +5,8 @@
 #include <iostream>
 #include <limits.h>
 
+#define _LAST_N_BITS_SET(n)             ((2 << ((n)-1))-1)
+
 namespace fs = std::filesystem;
 
 std::string _cook_path (const std::string &path);
@@ -29,7 +31,19 @@ get_file_listing (
         LOG_S(ERROR) << "Path is too long. len=" << temp_path.size();
         return false;
     }
-    return _get_filesys_structure (temp_path, vec);
+    auto status = _get_filesys_structure (temp_path, vec);
+    if (!status) {
+        return status;
+    }
+
+    //get the size of each file
+    for (auto &it : vec) {
+        if (!it.is_dir) {
+            const std::string _abs_path = _get_cwd() + path + it.name;
+            get_file_size (_abs_path, it.file_size);
+        }
+    }
+    return true;
 }
 
 /**
@@ -139,4 +153,37 @@ _get_filesys_structure (
         }
     }
     return true;
+}
+
+/**
+ * @brief               - Get a C++ string with human readable size
+ * @param bytes         - the size to be formatted
+ * @return std::string  - return string
+ */
+std::string 
+bytes_human_readable (
+    size_t bytes)
+{
+    static const std::vector<std::string> sizes = { "B", "kB", "MB", "GB", "TB"};
+    size_t order = 0;
+    size_t quot=bytes, rem=0;
+
+    while (quot > 1024) {
+        //bit shift for fun, basically rem = quot%1024
+        rem = quot & (_LAST_N_BITS_SET(10));
+        //bit shift for fun, basically quot = quot/1024
+        quot = quot >> 10;
+        order++;
+    }
+
+    std::string ret = std::to_string (quot) + "." + std::to_string (rem);
+    if (order >= sizes.size()) {
+        order = sizes.size()-1;
+    }
+
+    ret += " " + sizes[order];
+    if (order > 0) {
+        ret += " (" + std::to_string (bytes) + " B)";
+    }
+    return ret;
 }

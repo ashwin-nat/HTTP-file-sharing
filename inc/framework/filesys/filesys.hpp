@@ -8,6 +8,7 @@ struct FSEntry{
 public:
     bool is_dir;
     std::string name;
+    size_t file_size=0;
 };
 
 /**
@@ -42,5 +43,14 @@ bool
 get_file_size (
     const std::string &filepath,
     size_t &result);
+
+/**
+ * @brief               - Get a C++ string with human readable size
+ * @param bytes         - the size to be formatted
+ * @return std::string  - return string
+ */
+std::string 
+bytes_human_readable (
+    size_t bytes);
 
 #endif  //__FILESYS_HPP__
