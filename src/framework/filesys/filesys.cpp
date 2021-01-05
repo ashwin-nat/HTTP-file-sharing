@@ -182,8 +182,8 @@ bytes_human_readable (
     }
 
     ret += " " + sizes[order];
-    if (order > 0) {
-        ret += " (" + std::to_string (bytes) + " B)";
-    }
+    //if (order > 0) {
+        //ret += " (" + std::to_string (bytes) + " B)";
+    //}
     return ret;
 }
