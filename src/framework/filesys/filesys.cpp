@@ -147,6 +147,11 @@ _get_filesys_structure (
             continue;
         }
         item.name = _extract_name_from_path (entry.path());
+
+	//skip favicon file
+	if (item.name == "favicon.ico") {
+		continue;
+	}
         //skip hidden files and this executable file
         if (item.name[0] != '.') {
             vec.push_back (item);
