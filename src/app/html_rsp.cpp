@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <regex>
 
 static void _fill_html_body (std::stringstream &ss, std::vector<FSEntry> &tree,
         std::string &uri);
@@ -11,6 +12,7 @@ static void _get_back_links (std::stringstream &ss, std::string &parent);
 static void __get_vector_of_path_nodes (std::string &parent, 
         std::vector<std::string> &path_nodes);
 static void __fill_src_addr (std::stringstream &ss, const std::string &src);
+static const std::string _make_http_friendly (const std::string &filename);
 
 HTTPStatus 
 build_rsp_html (
@@ -111,8 +113,10 @@ _fill_html_body (
 
     //add every item to the unordered list
     for (auto &it : tree) {
+        const std::string &filename = _make_http_friendly (it.name);
+
         ss << "<li>";
-        ss << "<a href=\"" << prefix + it.name << "\">" << it.name;
+        ss << "<a href=\"" << prefix + filename << "\">" << it.name;
         //add / to the end of directory names
         if (it.is_dir) {
             ss << "/";
@@ -197,4 +201,12 @@ __get_vector_of_path_nodes (
 static void __fill_src_addr (std::stringstream &ss, const std::string &src)
 {
     ss << "Your IP address is " << src << "<br>" << CHAR_LF;
+}
+
+static 
+const std::string 
+_make_http_friendly (
+    const std::string &filename)
+{
+    return std::regex_replace(filename, std::regex(" "), "%20");
 }

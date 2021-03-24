@@ -1,19 +1,23 @@
 #include "http.hpp"
 #include <iostream>
 #include <sys/stat.h>
+#include <regex>
 
 static bool _is_text_file (const std::string &filename);
+static inline std::string _clean_filename (const std::string &filename);
 
 HTTPStatus 
 get_file (
     HTTPResponse &rsp, 
     HTTPRequest &req)
 {
-    std::string filename;
+    std::string resource;
     //skip first character since it's a /
     for (unsigned int index=1; index<req.m_uri.size(); ++index) {
-        filename += req.m_uri[index];
+        resource += req.m_uri[index];
     }
+
+    const std::string &filename = _clean_filename(resource);
 
     struct stat stat_buf;
     if (stat (filename.c_str(), &stat_buf) == -1) {
@@ -66,4 +70,12 @@ _is_text_file (
     }
 
     return ret;
+}
+
+static inline
+std::string 
+_clean_filename (
+    const std::string &filename)
+{
+    return std::regex_replace(filename, std::regex("%20"), " ");
 }
