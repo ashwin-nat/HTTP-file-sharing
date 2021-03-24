@@ -32,6 +32,9 @@ ProgOptions :: parse (
         //set directory
         case 'd':
             dir = optarg;
+	    if(dir[dir.size()-1] == '/') {
+		dir.pop_back();
+	    }
             break;
         case 'p':
             port = std::stoi (optarg);

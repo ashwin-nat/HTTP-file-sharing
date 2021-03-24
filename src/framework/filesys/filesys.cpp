@@ -39,7 +39,7 @@ get_file_listing (
     //get the size of each file
     for (auto &it : vec) {
         if (!it.is_dir) {
-            const std::string _abs_path = _get_cwd() + path + it.name;
+            const std::string _abs_path = temp_path + '/' + it.name;
             get_file_size (_abs_path, it.file_size);
         }
     }
