@@ -12,13 +12,14 @@ struct ProgOptions {
     std::string log_file;
     std::string db_file;
     int blacklist_threshold=-15;
+    std::string server_name;
 
-    bool 
+    bool
     parse (
-        int argc, 
+        int argc,
         char *argv[]);
-    
-    void 
+
+    void
     print_values (void);
 };
 

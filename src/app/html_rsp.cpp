@@ -1,5 +1,6 @@
 #include "filesys.hpp"
 #include "http.hpp"
+#include "prog_options.hpp"
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -9,32 +10,33 @@ static void _fill_html_body (std::stringstream &ss, std::vector<FSEntry> &tree,
         std::string &uri);
 static std::string _get_parent_dir (std::string &path);
 static void _get_back_links (std::stringstream &ss, std::string &parent);
-static void __get_vector_of_path_nodes (std::string &parent, 
+static void __get_vector_of_path_nodes (std::string &parent,
         std::vector<std::string> &path_nodes);
 static void __fill_src_addr (std::stringstream &ss, const std::string &src);
 static const std::string _make_http_friendly (const std::string &filename);
 
-HTTPStatus 
+HTTPStatus
 build_rsp_html (
-    std::vector<char> &buffer, 
+    std::vector<char> &buffer,
     HTTPRequest &req,
     std::vector <FSEntry> &tree,
     const std::string &src)
 {
+    extern ProgOptions prog_options;
     HTTPStatus ret = HTTPStatus::HTTP_OK;
     std::stringstream ss;
     ss << "<html>" << CHAR_LF;
 
     ss << "<head>" << CHAR_LF;
-    ss << "<meta http-equiv=\"Content-Type\" content=\"text/html; " << 
+    ss << "<meta http-equiv=\"Content-Type\" content=\"text/html; " <<
         "charset=utf-8\">" << CHAR_LF;
-    ss << "<title>Ashwin Server</title>" << CHAR_LF;
+    ss << "<title>" << prog_options.server_name << "</title>" << CHAR_LF;
     ss << "</head>" << CHAR_LF;
 
     ss << "<body>" << CHAR_LF;
     ss << "<h1> Directory Structure for " << req.m_uri << "</h1>" << CHAR_LF;
 
-    auto parent = (req.m_uri != "/" ) ? (_get_parent_dir (req.m_uri)) : 
+    auto parent = (req.m_uri != "/" ) ? (_get_parent_dir (req.m_uri)) :
             ("");
     //add link to parent directory, if needed
     if (!parent.empty()) {
@@ -58,9 +60,9 @@ build_rsp_html (
     return ret;
 }
 
-void 
+void
 get_404_page (
-    HTTPRequest &req, 
+    HTTPRequest &req,
     std::vector<char> &buffer,
     const std::string &src)
 {
@@ -68,7 +70,7 @@ get_404_page (
     ss << "<html>" << CHAR_LF;
 
     ss << "<head>" << CHAR_LF;
-    ss << "<meta http-equiv=\"Content-Type\" content=\"text/html; " << 
+    ss << "<meta http-equiv=\"Content-Type\" content=\"text/html; " <<
         "charset=utf-8\">" << CHAR_LF;
     ss << "<title>Ashwin Server</title>" << CHAR_LF;
     ss << "</head>" << CHAR_LF;
@@ -91,20 +93,20 @@ get_404_page (
     }
 }
 
-static void 
+static void
 _fill_html_body (
     std::stringstream &ss,
     std::vector<FSEntry> &tree,
     std::string &uri)
 {
     ss << "<ul style=\"list-style-type:none;\">" << CHAR_LF;
-    
+
     //prefix the links with the URI and ensure that it does not end with /
     std::string prefix = uri;
     if (prefix[prefix.length()-1] != '/') {
         prefix += '/';
     }
-    
+
     //if directory is empty, add 2 empty lines
     if (tree.empty()) {
         ss << "<br> <br>" << CHAR_LF;
@@ -156,9 +158,9 @@ static std::string _get_parent_dir (std::string &path)
     return ret;
 }
 
-static void 
+static void
 _get_back_links (
-    std::stringstream &ss, 
+    std::stringstream &ss,
     std::string &parent)
 {
     // ss << "<a href=\"" << parent << "\">";
@@ -180,9 +182,9 @@ _get_back_links (
     }
 }
 
-static void 
+static void
 __get_vector_of_path_nodes (
-    std::string &parent, 
+    std::string &parent,
     std::vector<std::string> &path_nodes)
 {
     std::string temp;
@@ -203,8 +205,8 @@ static void __fill_src_addr (std::stringstream &ss, const std::string &src)
     ss << "Your IP address is " << src << "<br>" << CHAR_LF;
 }
 
-static 
-const std::string 
+static
+const std::string
 _make_http_friendly (
     const std::string &filename)
 {

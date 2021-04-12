@@ -6,7 +6,7 @@
 
 static void print_help (const char *bin_name);
 
-bool 
+bool
 ProgOptions :: parse (
     int argc,
     char *argv[])
@@ -25,16 +25,17 @@ ProgOptions :: parse (
             -l: set log file
             -D: set DB file
             -T: blacklist threshold
+            -n: server name (header field)
     */
 
-    while ((opt = getopt (argc, argv, "d:p:Vht:vl:D:T:")) != -1) {
+    while ((opt = getopt (argc, argv, "d:p:Vht:vl:D:T:n:")) != -1) {
         switch (opt) {
         //set directory
         case 'd':
             dir = optarg;
-	    if(dir[dir.size()-1] == '/') {
-		dir.pop_back();
-	    }
+            if(dir[dir.size()-1] == '/') {
+                dir.pop_back();
+            }
             break;
         case 'p':
             port = std::stoi (optarg);
@@ -60,12 +61,15 @@ ProgOptions :: parse (
         case 'T':
             blacklist_threshold = std::stoi (optarg);
             break;
+        case 'n':
+            server_name = optarg;
+            break;
 
         //loguru uses this
         case 'v':
             break;
         default:
-            // std::cout << "unknown " << (char)opt << ": optind=" << optind 
+            // std::cout << "unknown " << (char)opt << ": optind=" << optind
             //     << " optarg=" << optarg << std::endl;
             unknown = true;
             break;
@@ -74,7 +78,7 @@ ProgOptions :: parse (
     return !unknown;
 }
 
-void 
+void
 ProgOptions :: print_values (void)
 {
     if (verbose) {
@@ -82,33 +86,33 @@ ProgOptions :: print_values (void)
 
         std::cout << PREFIX_SPACES << "Port = " << port << std::endl;
         std::cout << PREFIX_SPACES << "Directory = " << dir << std::endl;
-        std::cout << PREFIX_SPACES << "TPool size = " << tpool_size 
+        std::cout << PREFIX_SPACES << "TPool size = " << tpool_size
             << std::endl;
-        std::cout << PREFIX_SPACES << "TCP Backlog = " << tcp_backlog_size << 
+        std::cout << PREFIX_SPACES << "TCP Backlog = " << tcp_backlog_size <<
             std::endl;
         if (!log_file.empty()) {
-            std::cout << PREFIX_SPACES << "Log file = " << log_file << 
+            std::cout << PREFIX_SPACES << "Log file = " << log_file <<
                 std::endl;
         }
         if (!db_file.empty()) {
-            std::cout << PREFIX_SPACES << "Database file = " << db_file << 
+            std::cout << PREFIX_SPACES << "Database file = " << db_file <<
                 std::endl;
         }
     }
 }
 
-static void 
+static void
 print_help (
     const char *bin_name)
 {
     std::cout << "Usage: " << bin_name << std::endl;
 
     std::cout << "The following arguments are optional" << std::endl;
-    std::cout << PREFIX_SPACES << "Set server port number: -p <port_number>" 
+    std::cout << PREFIX_SPACES << "Set server port number: -p <port_number>"
         << std::endl;
-    std::cout << PREFIX_SPACES << "Set server directory: " << 
+    std::cout << PREFIX_SPACES << "Set server directory: " <<
         "-d <working_directory>" << std::endl;
-    std::cout << PREFIX_SPACES << "Verbose logging: -V (Upper case)" 
+    std::cout << PREFIX_SPACES << "Verbose logging: -V (Upper case)"
         << std::endl;
     std::cout << PREFIX_SPACES << "Thread pool size: -t <size>" << std::endl;
     std::cout << PREFIX_SPACES << "TCP Backlog size: -b <size>" << std::endl;
