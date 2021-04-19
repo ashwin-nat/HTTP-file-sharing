@@ -1,4 +1,5 @@
 #include "http.hpp"
+#include "filesys.hpp"
 #include <iostream>
 #include <sys/stat.h>
 #include <regex>
@@ -6,9 +7,9 @@
 static bool _is_text_file (const std::string &filename);
 static inline std::string _clean_filename (const std::string &filename);
 
-HTTPStatus 
+HTTPStatus
 get_file (
-    HTTPResponse &rsp, 
+    HTTPResponse &rsp,
     HTTPRequest &req)
 {
     std::string resource;
@@ -39,7 +40,17 @@ get_file (
     return HTTPStatus::HTTP_OK;
 }
 
-static bool 
+bool
+check_if_file (
+    const std::string &filename)
+{
+    //clean the filename, remove %20 URL encoding
+    std::string temp = std::regex_replace(filename, std::regex("%20"), " ");
+    return is_file (temp);
+
+}
+
+static bool
 _is_text_file (
     const std::string &filename)
 {
@@ -73,7 +84,7 @@ _is_text_file (
 }
 
 static inline
-std::string 
+std::string
 _clean_filename (
     const std::string &filename)
 {

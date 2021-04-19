@@ -9,14 +9,15 @@
 
 extern ProgOptions prog_options;
 
-static void process_get_request (HTTPRequest &req, HTTPResponse &rsp, 
+static void process_get_request (HTTPRequest &req, HTTPResponse &rsp,
     const std::string &src);
-    
-HTTPStatus build_rsp_html (std::vector<char> &buffer, HTTPRequest &req, 
+
+HTTPStatus build_rsp_html (std::vector<char> &buffer, HTTPRequest &req,
     std::vector <FSEntry> &tree, const std::string &src);
 void get_404_page (HTTPRequest &req, std::vector<char> &buffer,
     const std::string &src);
 HTTPStatus get_file (HTTPResponse &rsp, HTTPRequest &req);
+bool check_if_file (const std::string &filename);
 
 /**
  * @brief           - Process incoming HTTP request
@@ -25,7 +26,7 @@ HTTPStatus get_file (HTTPResponse &rsp, HTTPRequest &req);
  * @return true     - Request processed successfully
  * @return false    - request processing failed, drop the connection
  */
-bool 
+bool
 process_request (
     const std::vector<std::string> &lines,
     std::shared_ptr<TCPConnection> connection)
@@ -48,7 +49,7 @@ process_request (
 
         auto result = req.m_header.find ("User-Agent");
         if (result != req.m_header.end()) {
-            ss << result->first << ": " << 
+            ss << result->first << ": " <<
                 result->second;
         }
         LOG_S(INFO) << ss.str();
@@ -57,17 +58,17 @@ process_request (
     else {
         rsp.set_body (fail.c_str(), fail.size());
         rsp.m_status = HTTPStatus::HTTP_UNSUPP_METHOD;
-        
+
         LOG_S(WARNING) << "Received " << req.m_method << " request from" << src;
     }
 
     bytes = send_http_rsp (connection, rsp);
     if (bytes > 0 ) {
         int score=0;
-        LOG_S(INFO) << "Sent response of " << bytes_human_readable (bytes) << 
-            " to " << src << ". Status = " << http::to_string (rsp.m_status) << 
-            ((get_score_for_ipaddr(src, score)==true) ? 
-            std::string (" with score=" + std::to_string(score)) : 
+        LOG_S(INFO) << "Sent response of " << bytes_human_readable (bytes) <<
+            " to " << src << ". Status = " << http::to_string (rsp.m_status) <<
+            ((get_score_for_ipaddr(src, score)==true) ?
+            std::string (" with score=" + std::to_string(score)) :
             std::string ("") );
     }
     if (prog_options.verbose) {
@@ -77,7 +78,7 @@ process_request (
     return true;
 }
 
-static void 
+static void
 process_get_request (
     HTTPRequest &req,
     HTTPResponse &rsp,
@@ -85,7 +86,7 @@ process_get_request (
 {
     std::vector<char> rspbuff;
     //if request is a file, serve the file
-    if (is_file (req.m_uri)) {
+    if (check_if_file (req.m_uri)) {
 
         rsp.m_status = get_file (rsp, req);
         if (rsp.m_status == HTTPStatus::HTTP_NOT_FOUND) {
