@@ -3,7 +3,6 @@
 #include "filesys.hpp"
 #include "loguru.hpp"
 #include "prog_options.hpp"
-#include "db_stats.hpp"
 #include "blacklist.hpp"
 #include <sstream>
 
@@ -74,8 +73,9 @@ process_request (
     if (prog_options.verbose) {
         LOG_S(INFO) << "Content-Type: " << rsp.m_content_type;
     }
-    update_db_stats (src, rsp.m_status);
-    return true;
+    const bool good_request = (rsp.m_status == HTTPStatus::HTTP_OK) ?
+        (true) : (false);;
+    return update_ip_addr_stats (src, good_request);
 }
 
 static void
